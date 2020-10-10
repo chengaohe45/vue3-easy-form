@@ -1,0 +1,67 @@
+{
+  "name": "hello2",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0-beta.13",
+    "vuex": "^4.0.0-beta.4"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.5.7",
+    "@vue/cli-plugin-eslint": "^4.5.7",
+    "@vue/cli-plugin-router": "^4.5.7",
+    "@vue/cli-plugin-unit-mocha": "^4.5.7",
+    "@vue/cli-plugin-vuex": "^4.5.7",
+    "@vue/cli-service": "^4.5.7",
+    "@vue/compiler-sfc": "^3.0.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "@vue/test-utils": "^2.0.0-beta.6",
+    "babel-eslint": "^10.1.0",
+    "chai": "^4.2.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-vue": "^7.0.1",
+    "node-sass": "^4.14.1",
+    "prettier": "^1.19.1",
+    "sass-loader": "^8.0.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended",
+      "@vue/prettier"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {},
+    "overrides": [
+      {
+        "files": [
+          "**/__tests__/*.{j,t}s?(x)",
+          "**/tests/unit/**/*.spec.{j,t}s?(x)"
+        ],
+        "env": {
+          "mocha": true
+        }
+      }
+    ]
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
