@@ -297,12 +297,12 @@ export function parseComponent(
   newComponent.props = newComponent.props ? newComponent.props : {};
 
   // 提取出所需要的监听事件（可以再次改造，如主组件去掉左中两边空格的事件就要重新改造合并）
-  var eventOn = fetchActionEvent(newComponent.actions);
-  newComponent.__emitEvents = eventOn.__emitEvents;
-  newComponent.__nativeEvents = eventOn.__nativeEvents;
+  // var eventOn = fetchActionEvent(newComponent.actions);
+  newComponent.__emitEvents = fetchActionEvent(newComponent.actions);
+  // newComponent.__nativeEvents = eventOn.__nativeEvents;
 
   if (utils.isObj(newComponent.name)) {
-    newComponent.name = markRaw(newComponent.name);  // ?暂不明
+    newComponent.name = markRaw(newComponent.name); // ?暂不明
   }
 
   return newComponent;
@@ -486,11 +486,20 @@ export function fetchActionEvent(actions) {
       });
     });
   }
+  if (nativeEvents.length > 0) {
+    console.error(
+      "组件：由于vue3事件是不区分native事件，此事件将失效:",
+      nativeEvents.map(function(event) {
+        return event + "." + constant.ADJ_NATIVE;
+      })
+    );
+  }
 
-  return {
-    __emitEvents: emitEvents.length ? utils.unique(emitEvents) : null,
-    __nativeEvents: nativeEvents.length ? utils.unique(nativeEvents) : null
-  };
+  // return {
+  //   __emitEvents: emitEvents.length ? utils.unique(emitEvents) : null,
+  //   __nativeEvents: nativeEvents.length ? utils.unique(nativeEvents) : null
+  // };
+  return emitEvents.length ? utils.unique(emitEvents) : null;
 }
 
 /**

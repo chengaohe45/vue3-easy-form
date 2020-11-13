@@ -362,9 +362,9 @@ let schemaUtils = {
         );
       }
 
-      var eventOn = this.__fetchFormEvent(newPropItem);
-      newPropItem.component.__emitEvents = eventOn.__emitEvents;
-      newPropItem.component.__nativeEvents = eventOn.__nativeEvents;
+      // var eventOn = this.__fetchFormEvent(newPropItem);
+      newPropItem.component.__emitEvents = this.__fetchFormEvent(newPropItem);
+      // newPropItem.component.__nativeEvents = eventOn.__nativeEvents;
       newPropItem.__info = {
         pathKey: myPathKey,
         idxChain: "",
@@ -522,12 +522,10 @@ let schemaUtils = {
     ) {
       propItem.isTrim = true;
 
-      var componentName = propItem.component.name.toLowerCase
-        ? propItem.component.name.toLowerCase()
-        : propItem.component.name;
-      var curTrimEvent = constant.FORM_INPUTS.includes(componentName)
-        ? constant.INPUT_CHANGE
-        : global.trimEvent;
+      // var componentName = propItem.component.name.toLowerCase
+      //   ? propItem.component.name.toLowerCase()
+      //   : propItem.component.name;
+      var curTrimEvent = global.trimEvent;
       // 要去掉左右两边的空格，添此触发事件
       nativeName = getNativeName(curTrimEvent);
       if (nativeName) {
@@ -540,20 +538,30 @@ let schemaUtils = {
 
     // 自定义事件
     if (propItem.component && propItem.component.actions) {
-      var actionInfo = fetchActionEvent(propItem.component.actions);
-      if (actionInfo.__emitEvents) {
-        emitEvents = emitEvents.concat(actionInfo.__emitEvents);
+      var actionEmitEvents = fetchActionEvent(propItem.component.actions);
+      if (actionEmitEvents) {
+        emitEvents = emitEvents.concat(actionEmitEvents);
       }
 
-      if (actionInfo.__nativeEvents) {
-        nativeEvents = nativeEvents.concat(actionInfo.__nativeEvents);
-      }
+      // if (actionInfo.__nativeEvents) {
+      //   nativeEvents = nativeEvents.concat(actionInfo.__nativeEvents);
+      // }
     }
 
-    return {
-      __emitEvents: emitEvents.length ? utils.unique(emitEvents) : null,
-      __nativeEvents: nativeEvents.length ? utils.unique(nativeEvents) : null
-    };
+    if (nativeEvents.length > 0) {
+      console.error(
+        "表单：由于vue3事件是不区分native事件，此事件将失效:",
+        nativeEvents.map(function(event) {
+          return event + "." + constant.ADJ_NATIVE;
+        })
+      );
+    }
+
+    // return {
+    //   __emitEvents: emitEvents.length ? utils.unique(emitEvents) : null,
+    //   __nativeEvents: nativeEvents.length ? utils.unique(nativeEvents) : null
+    // };
+    return emitEvents.length ? utils.unique(emitEvents) : null;
   },
 
   /**

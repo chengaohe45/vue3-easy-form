@@ -42,7 +42,18 @@ export default {
             props: {
               placeholder: "Basic usage"
             },
-            model: "value"
+            model: "value",
+            actions: [{
+              trigger: "pressEnter",
+              handler: function() {
+                console.log(123);
+              }
+            }, {
+              trigger: "change.native",
+              handler: function() {
+                console.log(1243);
+              }
+            }] 
           },
           value: "首页位置"
         },
@@ -50,7 +61,7 @@ export default {
           label: "名称3",
           component: {
             name: test,
-            ref: 'test',
+            ref: "test",
             props: {
               placeholder: "Basic usage"
             },

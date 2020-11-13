@@ -19,9 +19,9 @@
       <a-button @click="storageHandler('set')">markRaw set</a-button>
       <a-button @click="storageHandler('get')">markRaw get</a-button>
       <a-button @click="storageHandler('remove')">markRaw remove</a-button>
-      <div>{{shallowStr}}</div>
-      <div>{{shallow.name}}</div>
-      <div>{{mark.name}}</div>
+      <div>{{ shallowStr }}</div>
+      <div>{{ shallow.name }}</div>
+      <div>{{ mark.name }}</div>
       <!-- <a-input
         v-model:value="testValue"
         placeholder="Basic usage"
@@ -143,7 +143,7 @@
 import test from "./test.vue";
 // import { addResize, removeResize } from "../base/libs/resize.js";
 // import { getStorage, removeStorage, setStorage } from "../base/libs/storage.js";
-import {shallowRef, markRaw} from 'vue'
+import { shallowRef, markRaw } from "vue";
 export default {
   name: "HelloWorld",
   components: {
@@ -158,13 +158,13 @@ export default {
       numValue: 5,
       listenerId: 0,
       shallowStr: 666,
-      shallow: {name: 1},
-      mark: {name: 2},
+      shallow: { name: 1 },
+      mark: { name: 2 }
     };
   },
   created() {
-    this.shallow = shallowRef({name: "shallow"});
-    this.mark = markRaw({name: "mark"});
+    this.shallow = shallowRef({ name: "shallow" });
+    this.mark = markRaw({ name: "mark" });
     this.shallowStr = shallowRef(9888);
   },
   methods: {
@@ -182,14 +182,14 @@ export default {
 
     storageHandler(type) {
       // var testKey = "testKey";
-      if (type == 'set') {
+      if (type == "set") {
         // this.shallowStr = "set shallowStr";
         this.shallow.name = "set shallow";
         this.mark.name = "set mark";
-      } else if (type == 'get'){
+      } else if (type == "get") {
         this.shallowStr = "get shallowStr";
-        this.shallow = {name: "get shallow2"};
-        this.mark = markRaw({name: "get mark"});
+        this.shallow = { name: "get shallow2" };
+        this.mark = markRaw({ name: "get mark" });
       } else {
         // removeStorage(testKey);
         console.log(this.shallow);

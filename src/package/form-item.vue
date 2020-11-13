@@ -767,9 +767,7 @@ export default {
       if (
         this.schema.isTrim &&
         utils.isStr(targetValue) &&
-        (eventName == global.trimEvent ||
-          (constant.FORM_INPUTS.includes(this.schema.component.name) &&
-            eventName == constant.INPUT_CHANGE))
+        eventName == global.trimEvent
       ) {
         // global.trimEvent暂不会是constant.INPUT_EVENT事件，因为初始化时就不给设置为此值
         var tmpValue = targetValue.trim();

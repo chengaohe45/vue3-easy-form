@@ -21,7 +21,7 @@ let global = {
   hasConsole: false, // 是否有控制台，默认为false
   model: "modelValue",
   trimEvent:
-    "change.native" /* 这个是form的表单项改变时，此事件触发后会去掉左右两边空格；一般都是change, 因为有些类库可以喜欢写changed */
+    "blur" /* 这个是form的表单项改变时，此事件触发后会去掉左右两边空格；一般都是change, 因为有些类库可以喜欢写changed */
 };
 
 export default global;

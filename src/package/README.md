@@ -9,3 +9,4 @@
 2. trim 事件的切换
 3. + model
 4. text for slots
+5. native事件

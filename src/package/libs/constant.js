@@ -40,7 +40,6 @@ let constant = {
 
   // 原生的表单组件，主要是用来过滤空格
   FORM_INPUTS: ["input", "textarea"],
-  INPUT_CHANGE: "change",
 
   IDX_CHAIN_KEY: "[i]", // 数组链的代替字符，不可随便改
 
@@ -74,6 +73,8 @@ let constant = {
   COM_TARGET_REF: "__comTarget__",
 
   DEFAULT_MODEL_EVENT: "update:modelValue" // 系统默认的v-model事件
+
+  // TRIM_EVENT: "blur"  // 去掉左右两边空格的触发时机
 };
 
 export default constant;

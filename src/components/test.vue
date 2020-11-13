@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import {ref, reactive, watchEffect} from 'vue'
+import { ref, reactive, watchEffect } from "vue";
 export default {
   name: "HelloWorld",
   data: function() {
@@ -33,27 +33,27 @@ export default {
     }
   },
   setup() {
-      const readersNumber = ref(0)
-      const readersNumber2 = ref(0)
-      const book = reactive({ title: 'Vue 3 Guide' })
-      let tt = 8
+    const readersNumber = ref(0);
+    const readersNumber2 = ref(0);
+    const book = reactive({ title: "Vue 3 Guide" });
+    let tt = 8;
 
-      watchEffect(() => console.log(+new Date(), readersNumber.value))
-        // -> logs 0
+    watchEffect(() => console.log(+new Date(), readersNumber.value));
+    // -> logs 0
 
-        // setInterval(() => {
-        //   readersNumber.value++
-        //   // -> logs 1
-        // }, 1000)
+    // setInterval(() => {
+    //   readersNumber.value++
+    //   // -> logs 1
+    // }, 1000)
 
-      // expose to template
-      return {
-        readersNumber,
-        readersNumber2,
-        book,
-        tt
-      }
-    },
+    // expose to template
+    return {
+      readersNumber,
+      readersNumber2,
+      book,
+      tt
+    };
+  },
   methods: {
     changeHandler() {
       console.log(arguments);

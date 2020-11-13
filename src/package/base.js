@@ -434,6 +434,7 @@ export default {
       var hasOwnValue = utils.hasOwn("value", config);
       var modelValueEvent = utils.getModelEvent(config); // v-model双向绑定事件
       var emitEvents;
+      console.log("config.__emitEvents", config.name, config.__emitEvents);
       if (config.__emitEvents) {
         emitEvents = utils.deepCopy(config.__emitEvents);
         if (hasOwnValue && !emitEvents.includes(modelValueEvent)) {
@@ -472,6 +473,7 @@ export default {
       //   _thisVm = undefined; // 没有关联清除
       //   return null;
       // }
+      console.log("emitOn", emitOn);
       return emitOn;
     },
 
