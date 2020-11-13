@@ -1,15 +1,44 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <p>
+    <input v-model="testValue" @change="changeHandler" @blur="blurHandler" />
+    <test @change="changeHandler"></test>
+    <div>
       For a guide and recipes on how to configure / customize this project,<br />
       check out the
       <a href="https://cli.vuejs.org" target="_blank" rel="noopener"
         >vue-cli documentation</a
       >.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
+      <a-input
+        v-model:value="testValue"
+        placeholder="Basic usage"
+        @change="changeHandler"
+        @blur="blurHandler"
+      />
+      <!-- <a-button @click="cancel">Default1</a-button> -->
+      <a-button @click="storageHandler('set')">markRaw set</a-button>
+      <a-button @click="storageHandler('get')">markRaw get</a-button>
+      <a-button @click="storageHandler('remove')">markRaw remove</a-button>
+      <div>{{shallowStr}}</div>
+      <div>{{shallow.name}}</div>
+      <div>{{mark.name}}</div>
+      <!-- <a-input
+        v-model:value="testValue"
+        placeholder="Basic usage"
+        @change="changeHandler"
+        @blur="blurHandler"
+      />
+      <a-input-number
+        id="inputNumber"
+        v-model:value="numValue"
+        :min="1"
+        :max="10"
+        @change="changeHandler"
+        @blur="blurHandler"
+      /> -->
+    </div>
+    <!-- <h3>Installed CLI Plugins</h3> -->
+    <!-- <ul>
       <li>
         <a
           href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel"
@@ -106,15 +135,70 @@
           >awesome-vue</a
         >
       </li>
-    </ul>
+    </ul> -->
   </div>
 </template>
 
 <script>
+import test from "./test.vue";
+// import { addResize, removeResize } from "../base/libs/resize.js";
+// import { getStorage, removeStorage, setStorage } from "../base/libs/storage.js";
+import {shallowRef, markRaw} from 'vue'
 export default {
   name: "HelloWorld",
+  components: {
+    test
+  },
   props: {
     msg: String
+  },
+  data: function() {
+    return {
+      testValue: "",
+      numValue: 5,
+      listenerId: 0,
+      shallowStr: 666,
+      shallow: {name: 1},
+      mark: {name: 2},
+    };
+  },
+  created() {
+    this.shallow = shallowRef({name: "shallow"});
+    this.mark = markRaw({name: "mark"});
+    this.shallowStr = shallowRef(9888);
+  },
+  methods: {
+    cancel() {
+      // removeResize(this.$data.listenerId2);
+      // removeResize(this.changeHandler);
+    },
+    changeHandler() {
+      console.log("changeHandler:", this);
+    },
+
+    blurHandler() {
+      console.log("blurHandler:", arguments);
+    },
+
+    storageHandler(type) {
+      // var testKey = "testKey";
+      if (type == 'set') {
+        // this.shallowStr = "set shallowStr";
+        this.shallow.name = "set shallow";
+        this.mark.name = "set mark";
+      } else if (type == 'get'){
+        this.shallowStr = "get shallowStr";
+        this.shallow = {name: "get shallow2"};
+        this.mark = markRaw({name: "get mark"});
+      } else {
+        // removeStorage(testKey);
+        console.log(this.shallow);
+        console.log(this.mark);
+      }
+    }
+  },
+  beforeUnmount() {
+    // removeResize(this.$data.listenerId);
   }
 };
 </script>
