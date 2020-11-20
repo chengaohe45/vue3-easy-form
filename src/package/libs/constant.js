@@ -21,7 +21,7 @@ let constant = {
   TYPE_RADIO: "radio",
   TYPE_CHECKBOX: "checkbox",
 
-  KEYUP_NATIVE: "keyup.native",
+  KEYUP_EVENT: "keyup",
   ENTER_SUBMIT: "@enterSubmit",
   ONLY_SUBMIT: "@submit",
 

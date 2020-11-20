@@ -550,7 +550,11 @@ let utils = {
   },
 
   getModelEvent(component) {
-    return "update:" + component.model;
+    if (component.name === "input" || component.name === "textarea") {
+      return "input";
+    } else {
+      return "update:" + component.model;
+    }
   },
   mergeGlobal(global, extra) {
     if (utils.isObj(extra)) {

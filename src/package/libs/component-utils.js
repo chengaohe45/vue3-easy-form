@@ -340,7 +340,7 @@ export function parseActions(actions, myPathKey) {
         if (tmpAction == constant.ENTER_SUBMIT) {
           // keyup.native提交事件
           newActions.push({
-            trigger: [constant.KEYUP_NATIVE],
+            trigger: [constant.KEYUP_EVENT],
             handler: enterSubmit
           });
         } else {

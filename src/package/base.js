@@ -429,12 +429,15 @@ export default {
      * 创建emit派发所需要监听的事件
      */
     createEmitOn(config, isMain, ref) {
+      if (config.name === "input") {
+        console.log("config.__emitEvents", config.__emitEvents);
+      }
       var _thisVm = this;
 
       var hasOwnValue = utils.hasOwn("value", config);
       var modelValueEvent = utils.getModelEvent(config); // v-model双向绑定事件
       var emitEvents;
-      console.log("config.__emitEvents", config.name, config.__emitEvents);
+      // console.log("config.__emitEvents", config.name, config.__emitEvents);
       if (config.__emitEvents) {
         emitEvents = utils.deepCopy(config.__emitEvents);
         if (hasOwnValue && !emitEvents.includes(modelValueEvent)) {
@@ -453,6 +456,7 @@ export default {
       emitEvents.forEach(eventName => {
         var onEventName = "on" + utils.firstUpper(eventName);
         if (eventName == modelValueEvent && hasOwnValue) {
+          console.log("2 config.__emitEvents", eventName);
           emitOn[onEventName] = function(eventData) {
             var eventValue = _thisVm.__parseModelEvent(config, eventData);
             if (config.value !== eventValue) {
@@ -473,7 +477,7 @@ export default {
       //   _thisVm = undefined; // 没有关联清除
       //   return null;
       // }
-      console.log("emitOn", emitOn);
+      // console.log("emitOn", emitOn);
       return emitOn;
     },
 

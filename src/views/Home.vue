@@ -2,7 +2,7 @@
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png" />
     <HelloWorld msg="Welcome to Your Vue.js App" />
-    <es-form :schema="schema"></es-form>
+    <es-form :schema="schema" @submit="formSubmit"></es-form>
   </div>
 </template>
 
@@ -35,6 +35,69 @@ export default {
             text: "首页位置"
           }
         },
+        name1: {
+          label: "名称",
+          component: {
+            name: "input",
+            value: "首页位置",
+            actions: [{
+              trigger: "input",
+              handler: function() {
+                console.log("update:modelValue");
+              }
+            }]
+          }
+        },
+        name11: {
+          label: "checkbox",
+          component: {
+            name: "input",
+            props: {
+              type: "checkbox"
+            },
+            value: true,
+            actions: [{
+              trigger: "input",
+              handler: function() {
+                console.log("update:modelValue");
+              }
+            }]
+          }
+        },
+        name1dd1: {
+          label: "radio",
+          component: {
+            name: "input",
+            props: {
+              type: "radio",
+              value: false,
+            },
+            value: true,
+            actions: [{
+              trigger: "update:modelValue",
+              handler: function() {
+                console.log("update:modelValue");
+              }
+            }]
+          }
+        },
+        name1dfdad1: {
+          label: "textarea",
+          component: {
+            name: "textarea",
+            props: {
+              type: "radio",
+              value: false,
+            },
+            value: "true",
+            actions: [{
+              trigger: "update:modelValue",
+              handler: function() {
+                console.log("update:modelValue");
+              }
+            }]
+          }
+        },
         name2: {
           label: "名称2",
           component: {
@@ -44,16 +107,16 @@ export default {
             },
             model: "value",
             actions: [{
-              trigger: "pressEnter",
+              trigger: "update:value",
               handler: function() {
-                console.log(123);
+                console.log("123...");
               }
             }, {
               trigger: "change.native",
               handler: function() {
                 console.log(1243);
               }
-            }] 
+            }, "@enterSubmit", "change=@submit"] 
           },
           value: "首页位置"
         },
@@ -121,6 +184,11 @@ export default {
     // console.log("isReadonly(this)", isReadonly(this));
     window.p = p;
     window.hh = this;
+  },
+  methods: {
+    formSubmit() {
+      console.log(arguments)
+    }
   }
 };
 </script>
