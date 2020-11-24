@@ -408,6 +408,7 @@ import constant from "./libs/constant.js";
 import consolePanel from "./components/console.vue";
 
 import dataCache from "./libs/data-cache";
+import { getModelEvent } from "./libs/component-utils";
 
 export default {
   name: "esForm",
@@ -761,7 +762,7 @@ export default {
     __initUi(schema) {
       this.$data.isInited = false;
       var tmpSchema = schemaUtils.completeSchema(schema, this.$data.id);
-      console.log("tmpSchema", tmpSchema);
+      // console.log("tmpSchema", tmpSchema);
       // 取出schema中的值，用于重置
       this._esOriginalSchemaValue = utils.deepCopy(
         formUtils.getValue(tmpSchema)
@@ -1025,7 +1026,10 @@ export default {
           });
         }
 
-        if (handlers.length > 0 || eventNames.includes(constant.INPUT_EVENT)) {
+        if (
+          handlers.length > 0 ||
+          eventNames.includes(constant.DEFAULT_MODEL_EVENT)
+        ) {
           // 这个可以记录是什么导致表单改变
           if (handlers.length > 0) {
             var infoData = Object.assign({ instance: this }, options);
@@ -1035,7 +1039,7 @@ export default {
             infoData = null;
           }
 
-          if (eventNames.includes(constant.INPUT_EVENT)) {
+          if (eventNames.includes(constant.DEFAULT_MODEL_EVENT)) {
             // this.$emit(
             //   "change",
             //   utils.deepCopy(this._esFormValue),
@@ -1104,13 +1108,14 @@ export default {
       this._esFormValue = formValue;
 
       this.__execEmit(constant.DEFAULT_MODEL_EVENT, [
-        utils.deepCopy(formValue)
-      ]);
-
-      this.__execEmit(constant.INPUT_EVENT, [
         utils.deepCopy(formValue),
         sourcePathKey ? sourcePathKey : false
       ]);
+
+      // this.__execEmit(constant.INPUT_EVENT, [
+      //   utils.deepCopy(formValue),
+      //   sourcePathKey ? sourcePathKey : false
+      // ]);
 
       if (this.$data.canConsole) {
         this.$data.csRootValue = utils.deepCopy(rootValue);
@@ -1132,15 +1137,20 @@ export default {
      * string 是需要检查的，但不正确
      */
     __checkRules: function(schema, value, triggers) {
-      var rules, fromArray;
+      var rules, fromArray, curModelEvent;
       if (schema.array) {
         if (schema.array.rules) {
           rules = schema.array.rules;
           fromArray = true;
         }
+        curModelEvent = constant.DEFAULT_MODEL_EVENT;
       } else {
         rules = schema.rules;
         fromArray = false;
+        curModelEvent = getModelEvent(
+          schema.component,
+          constant.DEFAULT_MODEL_EVENT
+        );
       }
 
       if (!rules) {
@@ -1240,7 +1250,7 @@ export default {
           // 当triggers为空时是不会进入这里的，所以triggers不会为空
           /* 若是正在输入且之前的错误信息为空提示则删掉 */
           if (
-            triggers.includes(constant.INPUT_EVENT) &&
+            triggers.includes(curModelEvent) &&
             schema.__invalidMsg === rules.emptyMsg
           ) {
             errMsg = true;
@@ -1272,7 +1282,7 @@ export default {
         if (triggers && fromArray) {
           // 数组非提交时
           if (
-            triggers.includes(constant.INPUT_EVENT) &&
+            triggers.includes(curModelEvent) &&
             schema.__invalidMsg === rules.emptyMsg
           ) {
             errMsg = true;

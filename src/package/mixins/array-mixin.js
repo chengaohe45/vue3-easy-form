@@ -12,6 +12,7 @@ const ARR_OP_TYPE_MOVE_UP = "up"; // up
 const ARR_OP_TYPE_MOVE_DOWN = "down"; // down
 
 export default {
+  emits: ["input"],
   created() {},
 
   data() {

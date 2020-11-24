@@ -48,7 +48,11 @@ export default {
     return {};
   },
   props: {
-    hasRequired: true
+    hasRequired: {
+      type: Boolean,
+      required: false,
+      default: true
+    }
   },
   methods: {}
 };

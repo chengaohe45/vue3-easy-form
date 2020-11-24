@@ -1,4 +1,5 @@
-import { isVNode } from "vue";
+import { isVNode, markRaw } from "vue";
+import constant from "./constant";
 
 let utils = {
   // __Vue: null,
@@ -190,10 +191,10 @@ let utils = {
    * @param  {[type]} data [description]
    * @return {[type]}   [description]
    */
-  deepCopy: function(data) {
+  deepCopy: function(data, openMark) {
     var rawRefs = [];
     var newRefs = [];
-    var newData = this.__deepCopy(data, rawRefs, newRefs);
+    var newData = this.__deepCopy(data, rawRefs, newRefs, openMark);
     rawRefs = null;
     newRefs = null;
     return newData;
@@ -204,15 +205,15 @@ let utils = {
    * @param  {[type]} data [description]
    * @return {[Array]}   [rawRefs] 记录原始的object and array
    * @return {[Array]}   [newRefs] 记录新的object and array
+   * @return {[Boolean]}   [openMark] 是否过滤组件的name是一个对象
    * rawRefs和newRefs是一对一的关系，作用防止数据中某个地方存在循环的问题
    */
-  __deepCopy: function(data, rawRefs, newRefs) {
+  __deepCopy: function(data, rawRefs, newRefs, openMark) {
     var type = utils.type(data);
     var newData, rawIndex;
     if (this.isVNode(data) || this.isVue(data)) {
       // 虚拟节点，vue组件实例，不用深度拷贝
       rawIndex = rawRefs.indexOf(data);
-      // console.log("__deepCopy vnode");
       if (rawIndex < 0) {
         // 一对一保存; 先保存索引地址，下一级的deep可能会用到
         rawRefs.push(data);
@@ -229,7 +230,7 @@ let utils = {
         newRefs.push(newData);
 
         for (var i = 0; i < data.length; ++i) {
-          newData[i] = this.__deepCopy(data[i], rawRefs, newRefs);
+          newData[i] = this.__deepCopy(data[i], rawRefs, newRefs, openMark);
         }
 
         return newData;
@@ -246,8 +247,34 @@ let utils = {
         rawRefs.push(data);
         newRefs.push(newData);
 
-        for (var key in data) {
-          newData[key] = this.__deepCopy(data[key], rawRefs, newRefs);
+        const nameKey = "name";
+        var key;
+        if (
+          openMark &&
+          data[constant.COMPONENT_FLAG_KEY] === constant.COMPONENT_FLAG_VALUE &&
+          this.isObj(data[nameKey])
+        ) {
+          for (key in data) {
+            if (key !== nameKey) {
+              newData[key] = this.__deepCopy(
+                data[key],
+                rawRefs,
+                newRefs,
+                openMark
+              );
+            } else {
+              newData[nameKey] = markRaw(data[nameKey]);
+            }
+          }
+        } else {
+          for (key in data) {
+            newData[key] = this.__deepCopy(
+              data[key],
+              rawRefs,
+              newRefs,
+              openMark
+            );
+          }
         }
         return newData;
       } else {
@@ -549,167 +576,170 @@ let utils = {
     return randStr;
   },
 
-  getModelEvent(component) {
-    if (component.name === "input" || component.name === "textarea") {
-      return "input";
-    } else {
-      return "update:" + component.model;
-    }
-  },
   mergeGlobal(global, extra) {
     if (utils.isObj(extra)) {
       for (var key in extra) {
-        if (!utils.isUndef(global[key])) {
-          var value = extra[key];
-          switch (key) {
-            case "boxRowHeight":
-            case "boxRowSpace":
-            case "boxLabelWidth":
-            case "rowHeight":
-            case "rowSpace":
-            case "labelWidth":
-            case "offsetLeft":
-            case "offsetRight":
-              if (key == "boxRowHeight") {
-                console.warn("全局设置boxRowHeight已经弃用，请改用为rowHeight");
-                key = "rowHeight";
-              } else if (key == "boxRowSpace") {
-                console.warn("全局设置boxRowSpace已经弃用，请改用为rowSpace");
-                key = "rowSpace";
-              } else if (key == "boxLabelWidth") {
-                console.warn(
-                  "全局设置boxLabelWidth已经弃用，请改用为labelWidth"
-                );
-                key = "labelWidth";
-              }
+        // if (!utils.isUndef(global[key])) {
+        var value = extra[key];
+        switch (key) {
+          case "boxRowHeight":
+          case "boxRowSpace":
+          case "boxLabelWidth":
+          case "rowHeight":
+          case "rowSpace":
+          case "labelWidth":
+          case "offsetLeft":
+          case "offsetRight":
+            if (key == "boxRowHeight") {
+              console.warn("全局设置boxRowHeight已经弃用，请改用为rowHeight");
+              key = "rowHeight";
+            } else if (key == "boxRowSpace") {
+              console.warn("全局设置boxRowSpace已经弃用，请改用为rowSpace");
+              key = "rowSpace";
+            } else if (key == "boxLabelWidth") {
+              console.warn("全局设置boxLabelWidth已经弃用，请改用为labelWidth");
+              key = "labelWidth";
+            }
 
-              if (utils.isNum(value) && value >= 0) {
-                global[key] = value;
+            if (utils.isNum(value) && value >= 0) {
+              global[key] = value;
+            } else {
+              console.warn(
+                "mergeGlobal: key(" +
+                  key +
+                  ")的值不是数值且大于等于0；此默认值将不重设"
+              );
+            }
+            break;
+          case "colon":
+            if (utils.isBool(value)) {
+              global[key] = value;
+            } else {
+              console.warn(
+                "mergeGlobal: key(" +
+                  key +
+                  ")的值不是true/false；此默认值将不重设"
+              );
+            }
+            break;
+          case "direction":
+            if (["v", "h"].includes(value)) {
+              global[key] = value;
+            } else {
+              console.warn(
+                "mergeGlobal: key(" +
+                  key +
+                  ')的值不是数组["v", "h"]；此默认值将不重设'
+              );
+            }
+            break;
+          case "defaultCom":
+            if (value && utils.isStr(value) && value.trim()) {
+              var defaltName = value.trim();
+              if (utils.validateComponentName(defaltName)) {
+                global[key] = defaltName;
               } else {
                 console.warn(
                   "mergeGlobal: key(" +
                     key +
-                    ")的值不是数值且大于等于0；此默认值将不重设"
+                    ")的值有误(组件名存在html非法字符)；此默认值将不重设"
                 );
               }
-              break;
-            case "colon":
-              if (utils.isBool(value)) {
-                global[key] = value;
-              } else {
-                console.warn(
-                  "mergeGlobal: key(" +
-                    key +
-                    ")的值不是true/false；此默认值将不重设"
-                );
-              }
-              break;
-            case "direction":
-              if (["v", "h"].includes(value)) {
-                global[key] = value;
-              } else {
-                console.warn(
-                  "mergeGlobal: key(" +
-                    key +
-                    ')的值不是数组["v", "h"]；此默认值将不重设'
-                );
-              }
-              break;
-            case "defaultCom":
-              if (value && utils.isStr(value) && value.trim()) {
-                var defaltName = value.trim();
-                if (utils.validateComponentName(defaltName)) {
-                  global[key] = defaltName;
+            } else {
+              console.warn(
+                "mergeGlobal: key(" +
+                  key +
+                  ")的值有误(1. 不能为空; 2. 是字符串)；此默认值将不重设"
+              );
+            }
+            break;
+
+          case "trimEvent":
+            console.warn("trimEvent已经移走了，请关注trimDoms");
+            break;
+
+          case "trimDoms":
+            var tmpValue;
+            if (utils.isStr(value)) {
+              tmpValue = [value.trim()];
+            } else if (utils.isArr(value)) {
+              tmpValue = value.map(item => {
+                if (utils.isStr(item)) {
+                  return item.trim();
                 } else {
-                  console.warn(
-                    "mergeGlobal: key(" +
-                      key +
-                      ")的值有误(组件名存在html非法字符)；此默认值将不重设"
-                  );
+                  return item;
                 }
-              } else {
-                console.warn(
-                  "mergeGlobal: key(" +
-                    key +
-                    ")的值有误(1. 不能为空; 2. 是字符串)；此默认值将不重设"
-                );
+              });
+            } else {
+              console.warn(
+                "mergeGlobal: key(" +
+                  key +
+                  ")的值有误, 必须是一个组件名或一个组件；此默认值将不重设"
+              );
+            }
+
+            if (tmpValue) {
+              tmpValue = tmpValue.filter(item => {
+                return item ? true : false;
+              });
+              if (tmpValue.length <= 0) {
+                console.log("trimDoms的长度为0");
               }
-              break;
-
-            case "trimEvent":
-              console.warn("trimEvent已经移走了，请关注trimDoms");
-              break;
-
-            case "trimDoms":
-              var tmpValue;
-              if (utils.isStr(value)) {
-                tmpValue = [value.trim()];
-              } else if (utils.isArr(value)) {
-                tmpValue = value.map(item => {
-                  if (utils.isStr(item)) {
-                    return item.trim();
-                  } else {
-                    return item;
+              // console.log("tmpValue", tmpValue);
+              global[key] = tmpValue;
+            }
+            break;
+          case "defaultVal":
+            if (!utils.isUndef(value)) {
+              global[key] = value;
+            } else {
+              console.warn(
+                "mergeGlobal: key(" +
+                  key +
+                  ")不能设置为undefined；此默认值将不重设"
+              );
+            }
+            break;
+          case "models":
+            if (utils.isObj(value)) {
+              var newModels = {};
+              for (var keyName in value) {
+                var modelValue = value[keyName];
+                if (utils.isStr(modelValue)) {
+                  modelValue = modelValue.trim();
+                  if (modelValue) {
+                    newModels[keyName] = modelValue;
                   }
-                });
-              } else {
-                console.warn(
-                  "mergeGlobal: key(" +
-                    key +
-                    ")的值有误, 必须是一个组件名或一个组件；此默认值将不重设"
-                );
-              }
-
-              if (tmpValue) {
-                tmpValue = tmpValue.filter(item => {
-                  return item ? true : false;
-                });
-                if (tmpValue.length <= 0) {
-                  console.log("trimDoms的长度为0");
                 }
-                // console.log("tmpValue", tmpValue);
-                global[key] = tmpValue;
               }
-              break;
-            case "defaultVal":
-              if (!utils.isUndef(value)) {
-                global[key] = value;
-              } else {
-                console.warn(
-                  "mergeGlobal: key(" +
-                    key +
-                    ")不能设置为undefined；此默认值将不重设"
-                );
-              }
-              break;
-            case "model":
-              if (utils.isStr(value) && value.trim()) {
-                global[key] = value.trim();
-              } else {
-                console.warn(
-                  "mergeGlobal: key(" +
-                    key +
-                    ")必须为字符串（如modelValue, value, checked）；此默认值将不重设"
-                );
-              }
-              break;
-            case "hasConsole":
-              if (utils.isBool(value)) {
-                global[key] = value;
-              } else {
-                console.warn(
-                  "mergeGlobal: key(" +
-                    key +
-                    ")不能设置为非true/false；此默认值将不重设"
-                );
-              }
-              break;
-            default:
-              break;
-          }
-        } else {
-          console.warn("mergeGlobal: key(" + key + ")不存在");
+              global["customModels"] = Object.assign(
+                global.customModels,
+                newModels
+              );
+            } else {
+              console.warn(
+                "mergeGlobal: key(" + key + ")必须为对象；此默认值将不重设"
+              );
+            }
+            break;
+          case "hasConsole":
+            if (utils.isBool(value)) {
+              global[key] = value;
+            } else {
+              console.warn(
+                "mergeGlobal: key(" +
+                  key +
+                  ")不能设置为非true/false；此默认值将不重设"
+              );
+            }
+            break;
+          default:
+            console.warn("mergeGlobal: key(" + key + ")不存在");
+            break;
         }
+        // } else {
+        //   console.warn("mergeGlobal: key(" + key + ")不存在");
+        // }
       }
     }
   }

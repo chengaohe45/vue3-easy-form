@@ -8,7 +8,7 @@
           :key="fieldName"
           :is-active="fieldName === schema.__tabsIndex"
           :has-error="itemSchema.__hasError"
-          @clickActive="clickActiveHandler"
+          @click-active="clickActiveHandler"
           :index="fieldName"
           :info="itemSchema.__info"
         >

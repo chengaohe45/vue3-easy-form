@@ -6,7 +6,7 @@
         schema.array.max > 0 &&
           schema.__propSchemaList.length >= schema.array.max
       "
-      @addItem="addItemHandler"
+      @add-item="addItemHandler"
       :type="schema.array.type"
     >
       <template
@@ -27,7 +27,7 @@
           @del-item="delItemHandler"
           @up-item="upItem"
           @down-item="downItem"
-          @clickActive="clickActiveHandler"
+          @click-active="clickActiveHandler"
           :del-msg="itemSchema.delMsg"
           :del-warn-btns="itemSchema.delWarnBtns"
           :info="itemSchema.__info"

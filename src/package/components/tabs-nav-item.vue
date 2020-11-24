@@ -130,7 +130,7 @@ export default {
   methods: {
     clickCntHandler(event) {
       if (!this.isActive && !this.isFromDelBtn(event.target)) {
-        this.$emit("clickActive", this.index);
+        this.$emit("click-active", this.index);
       } else {
         //不用理会，这个点击有其它作用
       }

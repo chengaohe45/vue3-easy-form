@@ -1,7 +1,11 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <input v-model="testValue" @change="changeHandler" @update:modelValue="blurHandler" />
+    <input
+      v-model="testValue"
+      @change="changeHandler"
+      @update:modelValue="blurHandler"
+    />
     <test @change="changeHandler"></test>
     <div>
       For a guide and recipes on how to configure / customize this project,<br />

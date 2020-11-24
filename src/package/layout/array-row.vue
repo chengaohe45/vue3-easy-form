@@ -171,7 +171,7 @@
           :index="-1"
           :has-del-warn="schema.array.hasDelWarn"
           @del-item="delAllItems"
-          @addItem="addItem"
+          @add-item="addItem"
           :del-msg="schema.array.delAllMsg"
           :del-warn-btns="schema.array.delWarnBtns"
           :info="schema.__info"

@@ -25,7 +25,8 @@ import {
   fetchActionEvent,
   getNativeName,
   parseAlign,
-  parseFlex
+  parseFlex,
+  getModelEvent
 } from "./component-utils";
 
 let m_currentFormId = undefined; // 应用于completeSchema,记录当前的解析是在哪个表单中
@@ -76,7 +77,11 @@ let schemaUtils = {
       } else {
         // 根节点有效的属性
         autoMatch = rootObj.autoMatch === true ? true : false;
-        rootActions = parseActions(rootObj.actions, "根");
+        rootActions = parseActions(
+          rootObj.actions,
+          constant.DEFAULT_MODEL_EVENT,
+          "根"
+        );
       }
 
       // 基础设置，最外层的一些东西固定
@@ -341,6 +346,14 @@ let schemaUtils = {
         myPathKey
       );
 
+      // 规则这个依赖于component
+      var rulesKey = "rules";
+      newPropItem[rulesKey] = this.__parsePropRules(
+        propItem[rulesKey],
+        getModelEvent(newPropItem.component, constant.DEFAULT_MODEL_EVENT)
+      );
+      newPropItem.__invalidMsg = false;
+
       if (this.__isTabsItem(propItem)) {
         newPropItem.layout = false;
         console.warn(
@@ -362,9 +375,7 @@ let schemaUtils = {
         );
       }
 
-      // var eventOn = this.__fetchFormEvent(newPropItem);
       newPropItem.component.__emitEvents = this.__fetchFormEvent(newPropItem);
-      // newPropItem.component.__nativeEvents = eventOn.__nativeEvents;
       newPropItem.__info = {
         pathKey: myPathKey,
         idxChain: "",
@@ -542,10 +553,6 @@ let schemaUtils = {
       if (actionEmitEvents) {
         emitEvents = emitEvents.concat(actionEmitEvents);
       }
-
-      // if (actionInfo.__nativeEvents) {
-      //   nativeEvents = nativeEvents.concat(actionInfo.__nativeEvents);
-      // }
     }
 
     if (nativeEvents.length > 0) {
@@ -557,10 +564,6 @@ let schemaUtils = {
       );
     }
 
-    // return {
-    //   __emitEvents: emitEvents.length ? utils.unique(emitEvents) : null,
-    //   __nativeEvents: nativeEvents.length ? utils.unique(nativeEvents) : null
-    // };
     return emitEvents.length ? utils.unique(emitEvents) : null;
   },
 
@@ -591,7 +594,7 @@ let schemaUtils = {
           "unit",
           "direction",
           "col",
-          "rules",
+          // "rules",
           "component",
           "array",
           "layout",
@@ -1165,7 +1168,7 @@ let schemaUtils = {
   /**
    * 解析规则
    */
-  __parsePropRules: function(rules) {
+  __parsePropRules: function(rules, modelEvent) {
     var tmpRawRequired = false,
       tmpCheckList = [];
     if (utils.isObj(rules)) {
@@ -1187,7 +1190,7 @@ let schemaUtils = {
         rawCheckList = [rawCheckList];
       }
       rawCheckList.forEach(item => {
-        var newItem = this.__perfectCheckItem(item);
+        var newItem = this.__perfectCheckItem(item, modelEvent);
         if (newItem) {
           // 正确
           tmpCheckList.push(newItem);
@@ -1486,8 +1489,15 @@ let schemaUtils = {
 
         before = utils.isFunc(array.before) ? array.before : false;
         value = utils.isArr(array.value) ? array.value : [];
-        rules = this.__parsePropRules(array.rules);
-        actions = parseActions(array.actions, myPathKey);
+        rules = this.__parsePropRules(
+          array.rules,
+          constant.DEFAULT_MODEL_EVENT
+        );
+        actions = parseActions(
+          array.actions,
+          constant.DEFAULT_MODEL_EVENT,
+          myPathKey
+        );
         rowSpace = utils.isNum(array.rowSpace) ? array.rowSpace : undefined;
         type = utils.isStr(array.type) ? array.type : false;
         var btnTypes = ["icon"];
@@ -1595,13 +1605,13 @@ let schemaUtils = {
   /**
    * 验证函数标准化
    */
-  __perfectCheckItem: function(item) {
+  __perfectCheckItem: function(item, modelEvent) {
     if (utils.isFunc(item)) {
-      return { handler: item, trigger: [constant.INPUT_EVENT] };
+      return { handler: item, trigger: [modelEvent] };
     } else if (parse.isEsScript(item)) {
       return {
         handler: parse.newEsFuncion(item),
-        trigger: [constant.INPUT_EVENT]
+        trigger: [modelEvent]
       };
     } else if (
       utils.isObj(item) &&
@@ -1619,11 +1629,11 @@ let schemaUtils = {
         throw "rules.check.name已经舍弃了且规则不再支持es写法，请使用函数赋值rules.checks.handler";
       }
 
-      var newTrigger = parseTrigger(item.trigger);
+      var newTrigger = parseTrigger(item.trigger, modelEvent);
       newTrigger =
         newTrigger && newTrigger.length
           ? utils.unique(newTrigger)
-          : [constant.INPUT_EVENT];
+          : [modelEvent];
 
       var newItem = {
         handler: handler,
@@ -1675,11 +1685,11 @@ let schemaUtils = {
         return true;
       }
 
-      if (key == "rules") {
-        newPropItem[key] = this.__parsePropRules(propItem[key]);
-        newPropItem.__invalidMsg = false;
-        return true;
-      }
+      // if (key == "rules") {
+      //   newPropItem[key] = this.__parsePropRules(propItem[key]);
+      //   newPropItem.__invalidMsg = false;
+      //   return true;
+      // }
       if (key == "help") {
         newPropItem[key] = this.__parsePropHelp(propItem[key], myPathKey);
         return true;

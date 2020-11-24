@@ -39,9 +39,7 @@
 </template>
 
 <script>
-// import esTabsNavItem from "./tabs-nav-item";
 import esTabsBtn from "./tabs-btn.vue";
-
 import tabsObserver from "../libs/tabs-observer.js";
 
 export default {
@@ -144,7 +142,7 @@ export default {
   methods: {
     addItemHandler() {
       this.$data.fromAdd = true;
-      this.$emit("addItem");
+      this.$emit("add-item");
     },
 
     /**

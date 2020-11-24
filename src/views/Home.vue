@@ -28,103 +28,10 @@ export default {
   data() {
     return {
       schema: {
-        name: {
-          label: "名称",
-          component: {
-            name: "div",
-            text: "首页位置"
-          }
-        },
-        name1: {
-          label: "名称",
-          component: {
-            name: "input",
-            value: "首页位置",
-            actions: [{
-              trigger: "input",
-              handler: function() {
-                console.log("update:modelValue");
-              }
-            }]
-          }
-        },
-        name11: {
-          label: "checkbox",
-          component: {
-            name: "input",
-            props: {
-              type: "checkbox"
-            },
-            value: true,
-            actions: [{
-              trigger: "input",
-              handler: function() {
-                console.log("update:modelValue");
-              }
-            }]
-          }
-        },
-        name1dd1: {
-          label: "radio",
-          component: {
-            name: "input",
-            props: {
-              type: "radio",
-              value: false,
-            },
-            value: true,
-            actions: [{
-              trigger: "update:modelValue",
-              handler: function() {
-                console.log("update:modelValue");
-              }
-            }]
-          }
-        },
-        name1dfdad1: {
-          label: "textarea",
-          component: {
-            name: "textarea",
-            props: {
-              type: "radio",
-              value: false,
-            },
-            value: "true",
-            actions: [{
-              trigger: "update:modelValue",
-              handler: function() {
-                console.log("update:modelValue");
-              }
-            }]
-          }
-        },
-        name2: {
-          label: "名称2",
-          component: {
-            name: "a-input",
-            props: {
-              placeholder: "Basic usage"
-            },
-            model: "value",
-            actions: [{
-              trigger: "update:value",
-              handler: function() {
-                console.log("123...");
-              }
-            }, {
-              trigger: "change.native",
-              handler: function() {
-                console.log(1243);
-              }
-            }, "@enterSubmit", "change=@submit"] 
-          },
-          value: "首页位置"
-        },
-        name3: {
-          label: "名称3",
+        test: {
+          label: "your test",
           component: {
             name: test,
-            ref: "test",
             props: {
               placeholder: "Basic usage"
             },
@@ -136,9 +43,148 @@ export default {
               test: () => <span>234</span>
             },
             text: 0,
-            model: "value"
+            actions: [
+              {
+                trigger: [true, "input"],
+                handler: function(data) {
+                  console.log("update:value", data);
+                }
+              }
+            ]
+          },
+          rules: {
+            required: true,
+            class: {
+              a: true,
+              b1: false
+            },
+            checks: {
+              trigger: "true",
+              handler: function() {
+                return "errofr";
+              }
+            }
+          },
+          array: {
+            value: ["123"],
+            rules: {
+              required: true
+            }
           },
 
+          value: "首页位置"
+        },
+        name: {
+          label: "div",
+          component: {
+            name: "div",
+            props: {
+              value: "344"
+            },
+            value: "??????",
+            text: "首页位置"
+          }
+        },
+        input: {
+          label: "input",
+          component: {
+            name: "input",
+            value: "首页位置",
+            actions: [
+              {
+                trigger: "input",
+                handler: function() {
+                  console.log("update:modelValue");
+                }
+              }
+            ]
+          }
+        },
+        checkbox: {
+          label: "checkbox",
+          component: {
+            name: "input",
+            props: {
+              type: "checkbox"
+            },
+            value: true,
+            actions: [
+              {
+                trigger: "input",
+                handler: function() {
+                  console.log("update:modelValue");
+                }
+              }
+            ]
+          }
+        },
+        radio: {
+          label: "radio",
+          component: {
+            name: "input",
+            props: {
+              type: "radio",
+              value: false
+            },
+            value: false,
+            actions: [
+              {
+                trigger: "update:modelValue",
+                handler: function() {
+                  console.log("update:modelValue");
+                }
+              }
+            ]
+          }
+        },
+        textarea: {
+          label: "textarea",
+          component: {
+            name: "textarea",
+            props: {
+              // type: "radio",
+              // value: false
+            },
+            value: "true",
+            actions: [
+              {
+                trigger: "input",
+                handler: function() {
+                  console.log("update:modelValue");
+                }
+              }
+            ]
+          }
+        },
+        "a-input": {
+          label: "a-input",
+          component: {
+            name: "a-input",
+            props: {
+              placeholder: "Basic usage"
+            },
+            model: "value",
+            actions: [
+              {
+                trigger: "update:value",
+                handler: function() {
+                  console.log("123...");
+                }
+              },
+              {
+                trigger: "change.native",
+                handler: function() {
+                  console.log(1243);
+                }
+              },
+              "@enterSubmit",
+              "change=@submit"
+            ]
+          },
+          rules: {
+            required: true,
+            checks: 222
+          },
           value: "首页位置"
         }
       }
@@ -187,7 +233,7 @@ export default {
   },
   methods: {
     formSubmit() {
-      console.log(arguments)
+      console.log(arguments);
     }
   }
 };

@@ -283,9 +283,12 @@
         <div
           v-if="schema.rules"
           v-show="schema.__invalidMsg"
-          class="es-form-error"
-          :class="schema.rules.class"
-          :style="schema.rules.style"
+          :class="
+            schema.rules.class
+              ? ['es-form-error', schema.rules.class]
+              : ['es-form-error']
+          "
+          :style="schema.rules.style ? schema.rules.style : {}"
         >
           {{ schema.__invalidMsg }}
         </div>
@@ -294,9 +297,12 @@
         <div
           v-if="schema.array.rules"
           v-show="schema.__invalidMsg"
-          class="es-form-error"
-          :class="schema.array.rules.class"
-          :style="schema.array.rules.style"
+          :class="
+            schema.array.rules.class
+              ? ['es-form-error', schema.array.rules.class]
+              : ['es-form-error']
+          "
+          :style="schema.array.rules.style ? schema.array.rules.style : {}"
         >
           {{ schema.__invalidMsg }}
         </div>
@@ -550,6 +556,8 @@ import constant from "./libs/constant";
 import global from "./libs/global";
 import esBase from "./base";
 
+import { getModelEvent } from "./libs/component-utils";
+
 export default {
   name: "form-item", // 声明name可以嵌套自身
   mixins: [itemMixin],
@@ -769,13 +777,15 @@ export default {
         utils.isStr(targetValue) &&
         eventName == global.trimEvent
       ) {
-        // global.trimEvent暂不会是constant.INPUT_EVENT事件，因为初始化时就不给设置为此值
         var tmpValue = targetValue.trim();
         if (tmpValue !== targetValue) {
           this.schema.component.value = tmpValue;
           targetValue = tmpValue;
-          eventNames.push(utils.getModelEvent(this.schema.component)); // 值有所改变，同时input一下
-          mustUpdate = true;
+          var modelEvent = getModelEvent(this.schema.component);
+          if (modelEvent) {
+            eventNames.push(modelEvent); // 值有所改变，同时input一下
+            mustUpdate = true;
+          }
         }
       }
 
@@ -800,7 +810,7 @@ export default {
      */
     formArrayInput(targetValue, eventData) {
       var checkSchema = [this.schema];
-      var eventNames = [constant.INPUT_EVENT, constant.CHANGE_EVENT];
+      var eventNames = [constant.DEFAULT_MODEL_EVENT, constant.CHANGE_EVENT];
 
       var options = {
         value: targetValue,

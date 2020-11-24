@@ -22,6 +22,9 @@ app.use(esForm, {
   offsetRight: 0,
   colon: false,
   direction: "h",
+  models: {
+    "a-input": "value"
+  },
   defaultCom: "a-input", // 如：若用element-ui, 改为el-input
   defaultVal: "", // 对defaultCom这个组件的value设置默认值
   trimDoms: ["input", "textarea", "a-input"], // 数组，空数组会全部清空

@@ -1,7 +1,11 @@
 <template>
   <div class="hello">
     <!-- <input v-model="testValue" @change="changeHandler"/> -->
-    <a-input v-model:value="testValue" placeholder="Basic usage" />
+    <a-input
+      :value="testValue"
+      placeholder="Basic usage"
+      @update:value="updateHandler"
+    />
     <slot :text="testValue">default</slot>
     <slot name="test">test</slot>
     <div>{{ readersNumber }} {{ readersNumber2 }} {{ book.title }}</div>
@@ -18,20 +22,27 @@ export default {
       testValue: "test"
     };
   },
-  emits: {
-    // 没有验证
-    click: null,
-
-    // 验证submit 事件
-    change: ({ value }) => {
-      if (typeof value === "string") {
-        return true;
-      } else {
-        // console.warn('Invalid submit event payload!')
-        return false;
-      }
+  props: {
+    modelValue: {
+      type: String,
+      required: false,
+      default: ""
     }
   },
+  // emits: {
+  //   // 没有验证
+  //   click: null,
+
+  //   // 验证submit 事件
+  //   change: ({ value }) => {
+  //     if (typeof value === "string") {
+  //       return true;
+  //     } else {
+  //       // console.warn('Invalid submit event payload!')
+  //       return false;
+  //     }
+  //   }
+  // },
   setup() {
     const readersNumber = ref(0);
     const readersNumber2 = ref(0);
@@ -54,10 +65,21 @@ export default {
       tt
     };
   },
+
+  created() {
+    this.testValue = this.modelValue;
+  },
   methods: {
-    changeHandler() {
-      console.log(arguments);
-      // this.$emit("change", this.testValue)
+    updateHandler(value) {
+      this.testValue = value;
+      this.$emit("update:modelValue", this.testValue);
+    }
+  },
+  watch: {
+    modelValue(newValue) {
+      if (newValue !== this.testValue) {
+        this.testValue = newValue;
+      }
     }
   }
 };

@@ -106,7 +106,7 @@ export default {
   methods: {
     addItem() {
       if (this.canAdd) {
-        this.$emit("addItem");
+        this.$emit("add-item");
       }
     }
   }

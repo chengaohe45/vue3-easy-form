@@ -10,3 +10,4 @@
 3. + model
 4. text for slots
 5. native事件
+6. array input改变

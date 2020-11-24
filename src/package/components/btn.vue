@@ -1,5 +1,5 @@
 <template>
-  <button :class="['es-btn', disabled ? 'disabled' : '']" @click="clickHandler">
+  <button :class="['es-btn', disabled ? 'disabled' : '']">
     <slot></slot>
   </button>
 </template>
@@ -20,11 +20,11 @@ export default {
   },
 
   methods: {
-    clickHandler($event) {
-      if (!this.disabled) {
-        this.$emit("click", $event);
-      }
-    }
+    // clickHandler($event) {
+    //   if (!this.disabled) {
+    //     this.$emit("click", $event);
+    //   }
+    // }
   }
 };
 </script>

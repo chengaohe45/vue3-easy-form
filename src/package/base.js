@@ -10,7 +10,7 @@
 import utils from "./libs/utils.js";
 import constant from "./libs/constant.js";
 import dataCache from "./libs/data-cache.js";
-import { parseComponent } from "./libs/component-utils";
+import { parseComponent, getModelEvent } from "./libs/component-utils";
 
 import {
   h as createElement,
@@ -98,8 +98,6 @@ export default {
 
         // 计算出props, attrs
         var newProps = {};
-        var newAttrs = {};
-        var domProps = {};
 
         var componentName = config.name.toLowerCase
           ? config.name.toLowerCase()
@@ -110,25 +108,18 @@ export default {
             configProps.type === constant.TYPE_CHECKBOX)
         ) {
           if (configProps.type === constant.TYPE_RADIO) {
-            Object.assign(newAttrs, configProps);
+            Object.assign(newProps, configProps);
             if (utils.hasOwn("value", config)) {
               // 用户设置了value的情况
-              newAttrs.checked = config.value === configProps.value;
+              newProps.checked = config.value === configProps.value;
             } else {
               // 没有用户value
-              newAttrs.checked =
+              newProps.checked =
                 utils.hasOwn("checked", configProps) &&
                 configProps.checked !== false
                   ? true
                   : false;
             }
-
-            Object.assign(newProps, configProps);
-            if (utils.hasOwn("checked", newProps)) {
-              delete newProps.checked;
-            }
-
-            domProps.checked = newAttrs.checked;
           } else {
             var checked = false;
             if (utils.hasOwn("value", config)) {
@@ -157,48 +148,22 @@ export default {
                   ? true
                   : false;
             }
-            Object.assign(newAttrs, configProps);
-            newAttrs.checked = checked;
-
             Object.assign(newProps, configProps);
-            if (utils.hasOwn("checked", newProps)) {
-              delete newProps.checked;
-            }
-
-            domProps.checked = newAttrs.checked;
+            newProps.checked = checked;
           }
         } else {
-          var newValue;
-          if (utils.hasOwn("value", config)) {
-            newValue = utils.isRefVal(config.value)
-              ? utils.deepCopy(config.value)
-              : config.value; // 这样防止引用地址被组件内部修改
-          } else {
-            newValue = configProps.value;
-          }
-          if (!constant.FORM_INPUTS.includes(componentName)) {
-            Object.assign(newAttrs, configProps);
-            // if (utils.hasOwn("value", newAttrs)) {
-            //   delete newAttrs.value;
-            // }
-            Object.assign(newProps, configProps);
-            // newProps.value = newValue;
+          Object.assign(newProps, configProps);
+          if (getModelEvent(config)) {
+            // 有双向绑定事件，需要写model
+            var newValue;
+            if (utils.hasOwn("value", config)) {
+              newValue = utils.isRefVal(config.value)
+                ? utils.deepCopy(config.value)
+                : config.value; // 这样防止引用地址被组件内部修改
+            } else {
+              newValue = configProps.value;
+            }
             newProps[config.model] = newValue;
-          } else {
-            Object.assign(newAttrs, configProps);
-            if (utils.hasOwn("value", newAttrs)) {
-              delete newAttrs.value;
-            }
-
-            Object.assign(newProps, configProps);
-            if (utils.hasOwn("value", newProps)) {
-              delete newProps.value;
-            }
-
-            // 经测试（value）：
-            // textarea必须要在domProps才能显示；
-            // input第一次可以在newAttrs写，之后也要在domProps才能显示值，所以也要是domProps才保险
-            domProps.value = newValue;
           }
         }
 
@@ -215,20 +180,20 @@ export default {
 
         scopedSlots = scopedSlots || {};
 
-        var bodyProps = Object.assign({}, newAttrs, domProps, newProps, emitOn);
+        Object.assign(newProps, emitOn);
         // COM_TARGET_REF时ref必须存在，因为要搜索
         if (
           ref === constant.COM_TARGET_REF ||
           (emitOn && Object.keys(emitOn).length > 0)
         ) {
-          bodyProps.ref = ref;
+          newProps.ref = ref;
         }
 
         if (config.class) {
-          bodyProps.class = config.class;
+          newProps.class = config.class;
         }
         if (config.style) {
-          bodyProps.style = config.style;
+          newProps.style = config.style;
         }
 
         var configComponent;
@@ -241,20 +206,16 @@ export default {
             configComponent = config.name;
           }
         } else {
-          // configComponent = utils.deepCopy(config.name);
-          // console.log(config.name)
           configComponent = config.name;
         }
-        // console.log('scopedSlots', scopedSlots);
+
         vnode = createElement(
           configComponent,
-          bodyProps,
+          newProps,
           Object.keys(scopedSlots).length > 0 ? scopedSlots : undefined
         );
 
-        newAttrs = null;
         newProps = null;
-        domProps = null;
 
         configProps = null;
       } else if (utils.isFunc(config)) {
@@ -331,7 +292,7 @@ export default {
       args = args ? args : [];
       // console.log("eventHandler", this.$refs[ref].$el);
       if (isMain) {
-        var modelValueEvent = utils.getModelEvent(config); // v-model双向绑定事件
+        var modelValueEvent = getModelEvent(config); // v-model双向绑定事件
         // 主组件：让父类去处理
         this.$emit(
           "trigger",
@@ -429,26 +390,29 @@ export default {
      * 创建emit派发所需要监听的事件
      */
     createEmitOn(config, isMain, ref) {
-      if (config.name === "input") {
-        console.log("config.__emitEvents", config.__emitEvents);
-      }
       var _thisVm = this;
 
       var hasOwnValue = utils.hasOwn("value", config);
-      var modelValueEvent = utils.getModelEvent(config); // v-model双向绑定事件
+      var modelValueEvent = getModelEvent(config); // v-model双向绑定事件
       var emitEvents;
-      // console.log("config.__emitEvents", config.name, config.__emitEvents);
-      if (config.__emitEvents) {
-        emitEvents = utils.deepCopy(config.__emitEvents);
-        if (hasOwnValue && !emitEvents.includes(modelValueEvent)) {
-          emitEvents.push(modelValueEvent);
+      if (modelValueEvent) {
+        // 不需要双向绑定事件
+        if (config.__emitEvents) {
+          emitEvents = utils.deepCopy(config.__emitEvents);
+          if (hasOwnValue && !emitEvents.includes(modelValueEvent)) {
+            emitEvents.push(modelValueEvent);
+          }
+        } else {
+          if (hasOwnValue) {
+            emitEvents = [modelValueEvent];
+          } else {
+            emitEvents = [];
+          }
         }
       } else {
-        if (hasOwnValue) {
-          emitEvents = [modelValueEvent];
-        } else {
-          emitEvents = [];
-        }
+        emitEvents = config.__emitEvents
+          ? utils.deepCopy(config.__emitEvents)
+          : [];
       }
 
       // emit发出的事件
@@ -456,7 +420,7 @@ export default {
       emitEvents.forEach(eventName => {
         var onEventName = "on" + utils.firstUpper(eventName);
         if (eventName == modelValueEvent && hasOwnValue) {
-          console.log("2 config.__emitEvents", eventName);
+          // console.log("2 config.__emitEvents", eventName);
           emitOn[onEventName] = function(eventData) {
             var eventValue = _thisVm.__parseModelEvent(config, eventData);
             if (config.value !== eventValue) {

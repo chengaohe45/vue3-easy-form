@@ -13,7 +13,7 @@ let constant = {
 
   ADJ_NATIVE: "native", // 将原生事件绑定到组件; 本身是区分大小写的；keyup.native为例：原生input.text监听不到，但组件（就只有一个input.text）可以监听到事件，
 
-  INPUT_EVENT: "input",
+  // INPUT_EVENT: "input",
   CHANGE_EVENT: "change", // 应用于数组改变
   CLICK_EVENT: "click",
 
@@ -41,6 +41,34 @@ let constant = {
   // 原生的表单组件，主要是用来过滤空格
   FORM_INPUTS: ["input", "textarea"],
 
+  // 非表单的原生标签如input, textarea，这样不用监听双向绑定，因为这些元素是原生的，不需要双向绑定，这个可提高效率。
+  // 注：尽量记录多一点, 但不可写input, textarea, select
+  PLAIN_HTML_TAGS: [
+    "div",
+    "span",
+    "label",
+    "p",
+    "button",
+    "img",
+    "canvas",
+    "video",
+    "a",
+    "i",
+    "table",
+    "tr",
+    "td",
+    "th",
+    "ul",
+    "li",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "dl",
+    "dd",
+    "dt"
+  ],
+
   IDX_CHAIN_KEY: "[i]", // 数组链的代替字符，不可随便改
 
   // 尽量记录多一点，没有特殊的作用：只是少点警告，对功能没有作用
@@ -67,14 +95,20 @@ let constant = {
     "h1",
     "h2",
     "h3",
-    "h4"
+    "h4",
+    "dl",
+    "dd",
+    "dt"
   ], // 一些原始标签，用于作过滤作用：resolveComponent对原始标签在开发环境会提出warning，厌烦
 
   COM_TARGET_REF: "__comTarget__",
 
-  DEFAULT_MODEL_EVENT: "update:modelValue" // 系统默认的v-model事件
+  DEFAULT_MODEL_EVENT: "update:modelValue", // 系统默认的v-model事件
 
   // TRIM_EVENT: "blur"  // 去掉左右两边空格的触发时机
+
+  COMPONENT_FLAG_KEY: "__COM_FLAG__",
+  COMPONENT_FLAG_VALUE: "CO,MP_@fd.saN*ENT_FLA^Gdjs%dsa" + Math.random() // 用来记录是否是组件
 };
 
 export default constant;

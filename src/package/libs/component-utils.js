@@ -29,36 +29,25 @@ export function parseMainComponent(propItem, formId, myPathKey) {
   if (utils.isVNode(component)) {
     throw myPathKey + " > 主组件暂不支持直接配置虚拟节点";
   } else if (utils.isObj(component) && Object.keys(component).length > 0) {
-    if (!component.name) {
-      component = Object.assign({}, component, { name: global.defaultCom }); // 补上组件name
-    }
-    newComponent = parseComponent(component, myPathKey);
-    // 主组特有配置
-    var ref = utils.isStr(component.ref) ? component.ref.trim() : null;
-    if (ref) {
-      newComponent.ref = ref;
-    }
-
-    newComponent.align = parseAlign(component.align, defaultAlign);
-    newComponent.flex = parseFlex(component.flex, component.size);
-    // value
     if (utils.hasOwn("value", propItem)) {
-      newComponent.value = propItem.value;
+      component = Object.assign({}, component);
+      component.value = propItem.value;
     } else if (utils.hasOwn("value", component)) {
-      newComponent.value = component.value;
+      // 说是取我本身
     } else {
+      component = Object.assign({}, component);
       // 自动补充value: 因为是表单组件
-      newComponent.value =
+      component.value =
         component.name === global.defaultCom ? global.defaultVal : undefined;
     }
+    // 下面会继续统一判断
   } else if (utils.isStr(component)) {
     // 要自动补充value
-    newComponent = {
+    component = {
       name: component,
-      actions: [],
-      align: defaultAlign,
-      flex: false,
-      model: global.model,
+      // actions: [],
+      // align: defaultAlign,
+      // flex: false,
       value: utils.hasOwn("value", propItem)
         ? propItem.value
         : global.defaultCom === component
@@ -67,23 +56,27 @@ export function parseMainComponent(propItem, formId, myPathKey) {
     };
   } else {
     // 要自动补充value
-    newComponent = {
+    component = {
       name: global.defaultCom,
-      actions: [],
-      align: defaultAlign,
-      flex: false,
-      model: global.model,
+      // actions: [],
+      // align: defaultAlign,
+      // flex: false
       value: global.defaultVal
     };
   }
 
-  // 判断名称是否合法
-  // if (
-  //   utils.isStr(newComponent.name) &&
-  //   !utils.validateComponentName(newComponent.name)
-  // ) {
-  //   throw "组件名(" + newComponent.name + ")存在html非法字符";
-  // }
+  if (!component.name) {
+    component = Object.assign({}, component, { name: global.defaultCom }); // 补上组件name
+  }
+  newComponent = parseComponent(component, myPathKey);
+  // 主组特有配置
+  var ref = utils.isStr(component.ref) ? component.ref.trim() : null;
+  if (ref) {
+    newComponent.ref = ref;
+  }
+
+  newComponent.align = parseAlign(component.align, defaultAlign);
+  newComponent.flex = parseFlex(component.flex, component.size);
 
   newComponent.__formId = formId;
   // newComponent.props = newComponent.props ? newComponent.props : {};
@@ -121,6 +114,7 @@ export function parsePropComponent(value, formId, myPathKey, canEmpty = false) {
         if (newComponent) {
           if (utils.hasOwn("name", newComponent)) {
             delete newComponent.name; // 本来就没有或为空，删除它
+            delete newComponent.model;
           }
         } else {
           return false;
@@ -143,13 +137,11 @@ export function parsePropComponent(value, formId, myPathKey, canEmpty = false) {
         newComponent = {
           text: value,
           __rawText: parse.newEsFuncion(value),
-          model: global.model,
           hidden: false
         };
       } else {
         newComponent = {
           text: value,
-          model: global.model,
           hidden: false
         };
       }
@@ -160,7 +152,6 @@ export function parsePropComponent(value, formId, myPathKey, canEmpty = false) {
     newComponent = {
       text: value,
       __rawText: value,
-      model: global.model,
       hidden: false
     };
   } else {
@@ -198,9 +189,6 @@ export function parseComponent(
       }
 
       newComponent.name = name;
-      newComponent.actions = parseActions(component.actions, myPathKey);
-      newComponent.model = parseModel(component.model);
-
       // 属性
       var propInfo = parseComProps(
         component.props,
@@ -296,13 +284,19 @@ export function parseComponent(
 
   newComponent.props = newComponent.props ? newComponent.props : {};
 
+  newComponent.model = parseModelKey(newComponent, component.model);
+
+  newComponent.actions = parseActions(
+    component.actions,
+    getModelEvent(newComponent, constant.DEFAULT_MODEL_EVENT),
+    myPathKey
+  ); // 要在model之后
   // 提取出所需要的监听事件（可以再次改造，如主组件去掉左中两边空格的事件就要重新改造合并）
-  // var eventOn = fetchActionEvent(newComponent.actions);
   newComponent.__emitEvents = fetchActionEvent(newComponent.actions);
-  // newComponent.__nativeEvents = eventOn.__nativeEvents;
 
   if (utils.isObj(newComponent.name)) {
-    newComponent.name = markRaw(newComponent.name); // ?暂不明
+    newComponent.name = markRaw(newComponent.name); // ...
+    newComponent[constant.COMPONENT_FLAG_KEY] = constant.COMPONENT_FLAG_VALUE;
   }
 
   return newComponent;
@@ -313,7 +307,7 @@ export function parseComponent(
  * @param {*} actions
  * @param {*} myPathKey
  */
-export function parseActions(actions, myPathKey) {
+export function parseActions(actions, modelEvent, myPathKey) {
   // 解析是否为特殊写法
   var newActions = [];
   if (
@@ -352,7 +346,7 @@ export function parseActions(actions, myPathKey) {
           ) {
             // newActions.push({trigger: actionInfos[0], handler: onlySubmit});
             newAction = {};
-            newTrigger = parseTrigger(actionInfos[0]);
+            newTrigger = parseTrigger(actionInfos[0], modelEvent);
             newAction.trigger =
               newTrigger && newTrigger.length > 0
                 ? newTrigger
@@ -367,7 +361,7 @@ export function parseActions(actions, myPathKey) {
         }
       } else if (utils.isFunc(tmpAction.handler)) {
         newAction = {};
-        newTrigger = parseTrigger(tmpAction.trigger);
+        newTrigger = parseTrigger(tmpAction.trigger, modelEvent);
         newAction.trigger =
           newTrigger && newTrigger.length > 0
             ? newTrigger
@@ -388,14 +382,6 @@ export function parseActions(actions, myPathKey) {
   return newActions.length > 0 ? newActions : null;
 }
 
-export function parseModel(name) {
-  var tmpName = utils.isStr(name) ? name.trim() : "";
-  if (!tmpName) {
-    tmpName = global.model;
-  }
-  return tmpName;
-}
-
 /**
  * 解析触发事件
  * @param {*} trigger
@@ -403,8 +389,12 @@ export function parseModel(name) {
  * 2. 事件组成的数组
  * @returns 返回数据组，没有时返回一个null
  */
-export function parseTrigger(trigger) {
+export function parseTrigger(trigger, modelEvent) {
+  modelEvent = modelEvent ? modelEvent : constant.DEFAULT_MODEL_EVENT;
   var tmpTriggers;
+  if (trigger === true) {
+    trigger = modelEvent;
+  }
   if (utils.isArr(trigger) || utils.isStr(trigger)) {
     if (utils.isStr(trigger)) {
       trigger = trigger.trim();
@@ -415,6 +405,8 @@ export function parseTrigger(trigger) {
         if (utils.isStr(item)) {
           item = item.trim();
           tmpTriggers = tmpTriggers.concat(item.split(/\s+/));
+        } else if (item === true) {
+          tmpTriggers.push(modelEvent);
         }
       });
     }
@@ -495,10 +487,6 @@ export function fetchActionEvent(actions) {
     );
   }
 
-  // return {
-  //   __emitEvents: emitEvents.length ? utils.unique(emitEvents) : null,
-  //   __nativeEvents: nativeEvents.length ? utils.unique(nativeEvents) : null
-  // };
   return emitEvents.length ? utils.unique(emitEvents) : null;
 }
 
@@ -553,6 +541,46 @@ export function parseFlex(flex, size) {
   }
 
   return false;
+}
+
+export function getModelEvent(component, defaultEvent) {
+  var componentName = component.name;
+  if (utils.isStr(component.name)) {
+    componentName = component.name.toLowerCase();
+  }
+
+  if (constant.PLAIN_HTML_TAGS.includes(componentName)) {
+    return defaultEvent ? defaultEvent : "";
+  } else if (constant.FORM_INPUTS.includes(componentName)) {
+    return "input";
+  } else {
+    return "update:" + component.model;
+  }
+}
+
+function parseModelKey(component, rawModelKey) {
+  var componentName = component.name;
+  if (utils.isStr(component.name)) {
+    componentName = component.name.toLowerCase();
+  }
+  if (constant.FORM_INPUTS.includes(componentName)) {
+    return "value";
+  } else {
+    var newModelKey;
+    if (utils.isStr(rawModelKey)) {
+      if (rawModelKey) {
+        newModelKey = rawModelKey.trim();
+      }
+    } else if (utils.isStr(component.name)) {
+      newModelKey = global.customModels[component.name];
+    }
+
+    if (!newModelKey) {
+      newModelKey = global.defaultModel;
+    }
+
+    return newModelKey;
+  }
 }
 
 /**

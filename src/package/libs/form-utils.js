@@ -127,9 +127,10 @@ let formUtils = {
       "title",
       "isTmp"
     ];
+
     for (var key in schema) {
       if (!excludeKeys.includes(key)) {
-        newItem[key] = utils.deepCopy(schema[key]);
+        newItem[key] = utils.deepCopy(schema[key], true);
       }
     }
 
@@ -138,11 +139,9 @@ let formUtils = {
     }
 
     if (!utils.isUndef(schema.array.subLabel)) {
-      newItem.subLabel = utils.deepCopy(schema.array.subLabel);
-      // newItem.__invalidMsg = false;
+      newItem.subLabel = utils.deepCopy(schema.array.subLabel, true);
     }
 
-    // console.log("schema.layout.name == constant.LAYOUT_TABS：", schema.layout.name == constant.LAYOUT_TABS);
     if (schema.layout && schema.layout.name == constant.LAYOUT_TABS) {
       newItem.__tabsIndex = false;
     }

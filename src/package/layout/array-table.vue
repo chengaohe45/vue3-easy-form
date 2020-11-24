@@ -203,7 +203,7 @@
                   schema.__propSchemaList.length < schema.array.max
               "
               @del-item="delAllItems"
-              @addItem="addItem"
+              @add-item="addItem"
               :del-msg="schema.array.delAllMsg"
               :del-warn-btns="schema.array.delWarnBtns"
               :info="schema.__info"
