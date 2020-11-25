@@ -85,6 +85,7 @@ export default {
   data() {
     return {};
   },
+  emits: ["up-item", "down-item", "copy-item"],
   props: {
     canDelete: {
       type: Boolean,

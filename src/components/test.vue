@@ -10,18 +10,21 @@
     <slot name="test">test</slot>
     <div>{{ readersNumber }} {{ readersNumber2 }} {{ book.title }}</div>
     <div>{{ tt }}</div>
+    <button @click="clickHandler">
+      123
+    </button>
   </div>
 </template>
 
 <script>
-import { ref, reactive, watchEffect } from "vue";
+import { ref, reactive } from "vue";
 export default {
-  name: "HelloWorld",
   data: function() {
     return {
       testValue: "test"
     };
   },
+  // emits: ["test1"],
   props: {
     modelValue: {
       type: String,
@@ -49,7 +52,7 @@ export default {
     const book = reactive({ title: "Vue 3 Guide" });
     let tt = 8;
 
-    watchEffect(() => console.log(+new Date(), readersNumber.value));
+    // watchEffect(() => console.log(+new Date(), readersNumber.value));
     // -> logs 0
 
     // setInterval(() => {
@@ -73,6 +76,12 @@ export default {
     updateHandler(value) {
       this.testValue = value;
       this.$emit("update:modelValue", this.testValue);
+
+      this.$emit("input1", this.testValue);
+    },
+
+    clickHandler() {
+      this.$emit("add-item", this.testValue);
     }
   },
   watch: {

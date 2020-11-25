@@ -141,7 +141,7 @@
           v-if="schema.array.name == 'array'"
           :is="'array-row'"
           :schema="schema"
-          @input="formArrayInput"
+          @array-update="formArrayUpdate"
         >
           <!-- 数组-非叶子(若有) -->
           <template
@@ -171,7 +171,7 @@
           v-if="schema.array.name == 'array-legend'"
           :is="'array-legend'"
           :schema="schema"
-          @input="formArrayInput"
+          @array-update="formArrayUpdate"
         >
           <!-- 数组-非叶子(若有) -->
           <template
@@ -204,7 +204,7 @@
           v-if="schema.array.name == 'array-card'"
           :is="'array-card'"
           :schema="schema"
-          @input="formArrayInput"
+          @array-update="formArrayUpdate"
         >
           <!-- 数组-非叶子(不会有，已经过滤掉了) -->
 
@@ -227,7 +227,7 @@
           v-else-if="schema.array.name == 'array-table'"
           :is="'array-table'"
           :schema="schema"
-          @input="formArrayInput"
+          @array-update="formArrayUpdate"
         >
           <!-- 数组-非叶子(若有) -->
           <template
@@ -249,7 +249,7 @@
           v-else-if="schema.array && schema.array.name == 'array-tabs'"
           :is="'array-tabs'"
           :schema="schema"
-          @input="formArrayInput"
+          @array-update="formArrayUpdate"
         >
           <!-- 数组-非叶子(若有) -->
           <template
@@ -808,7 +808,7 @@ export default {
      * handlers 需要处理的input and change actions
      * eventData 事件本身的参数；具体看array-mixin.js
      */
-    formArrayInput(targetValue, eventData) {
+    formArrayUpdate(targetValue, eventData) {
       var checkSchema = [this.schema];
       var eventNames = [constant.MODEL_VALUE_EVENT, constant.CHANGE_EVENT];
 

@@ -72,6 +72,7 @@ export default {
   data() {
     return {};
   },
+  emits: ["add-item"],
   components: {
     esBtn,
     esBase

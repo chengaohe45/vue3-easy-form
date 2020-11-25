@@ -1,6 +1,7 @@
 // import utils from "../libs/utils";
 import popUtils from "../libs/pop-utils";
 export default {
+  emits: ["del-item"],
   data() {
     return {
       showPop: false,

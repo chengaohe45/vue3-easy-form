@@ -6,7 +6,7 @@
       @change="changeHandler"
       @update:modelValue="blurHandler"
     />
-    <test @change="changeHandler"></test>
+    <test @add-item="addItem" v-model="testValue"></test>
     <div>
       For a guide and recipes on how to configure / customize this project,<br />
       check out the
@@ -158,7 +158,7 @@ export default {
   },
   data: function() {
     return {
-      testValue: "",
+      testValue: "666",
       numValue: 5,
       listenerId: 0,
       shallowStr: 666,
@@ -199,6 +199,10 @@ export default {
         console.log(this.shallow);
         console.log(this.mark);
       }
+    },
+
+    addItem(value) {
+      this.$emit("add-item", value);
     }
   },
   beforeUnmount() {

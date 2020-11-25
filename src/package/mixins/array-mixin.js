@@ -12,7 +12,7 @@ const ARR_OP_TYPE_MOVE_UP = "up"; // up
 const ARR_OP_TYPE_MOVE_DOWN = "down"; // down
 
 export default {
-  emits: ["input"],
+  emits: ["array-update"],
   created() {},
 
   data() {
@@ -64,7 +64,7 @@ export default {
           this.schema.__info.pathKey
         );
         var newValue = formUtils.getValue(this.schema);
-        this.$emit("input", newValue, eventData);
+        this.$emit("array-update", newValue, eventData);
       }
     },
 
@@ -99,7 +99,7 @@ export default {
       if (this.schema.__propSchemaList.length > 0) {
         this.schema.__propSchemaList = [];
         var newValue = formUtils.getValue(this.schema);
-        this.$emit("input", newValue, eventData);
+        this.$emit("array-update", newValue, eventData);
       }
     },
 
@@ -138,7 +138,7 @@ export default {
           this.schema.__info.pathKey
         );
         var newValue = formUtils.getValue(this.schema);
-        this.$emit("input", newValue, eventData);
+        this.$emit("array-update", newValue, eventData);
       }
     },
 
@@ -177,7 +177,7 @@ export default {
           this.schema.__info.pathKey
         );
         var newValue = formUtils.getValue(this.schema);
-        this.$emit("input", newValue, eventData);
+        this.$emit("array-update", newValue, eventData);
       }
     },
 
@@ -271,7 +271,7 @@ export default {
         index: curIndex,
         data: utils.deepCopy(newValue[curIndex]) // 比before多了这个
       };
-      this.$emit("input", newValue, eventData); //同步更新的
+      this.$emit("array-update", newValue, eventData); //同步更新的
     },
 
     __createHookData(value, eventData, formInstance) {

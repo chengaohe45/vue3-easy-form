@@ -1,7 +1,11 @@
 <template>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <component
+      :is="'HelloWorld'"
+      msg="Welcome to Your Vue.js App"
+      @add-item="addItem"
+    />
     <es-form :schema="schema" @submit="formSubmit"></es-form>
   </div>
 </template>
@@ -45,9 +49,10 @@ export default {
             text: 0,
             actions: [
               {
-                trigger: [true, "input"],
+                trigger: ["click"],
                 handler: function(data) {
-                  console.log("update:value", data);
+                  console.log("input1", data);
+                  this.$emit("test", 123);
                 }
               }
             ]
@@ -66,11 +71,13 @@ export default {
             }
           },
           array: {
-            value: ["123"],
+            value: ["123", "abc"],
+            hasSort: true,
+            hasCopy: true,
             rules: {
               required: true,
               checks: {
-                trigger: ["input"],
+                trigger: ["input1"],
                 handler: function() {
                   return "erro22222fr";
                 }
@@ -248,6 +255,10 @@ export default {
   methods: {
     formSubmit() {
       console.log(arguments);
+    },
+    addItem(value) {
+      console.log("value:", value);
+      this.$emit("add-item", 123);
     }
   }
 };
