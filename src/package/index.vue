@@ -1028,7 +1028,7 @@ export default {
 
         if (
           handlers.length > 0 ||
-          eventNames.includes(constant.DEFAULT_MODEL_EVENT)
+          eventNames.includes(constant.MODEL_VALUE_EVENT)
         ) {
           // 这个可以记录是什么导致表单改变
           if (handlers.length > 0) {
@@ -1039,7 +1039,7 @@ export default {
             infoData = null;
           }
 
-          if (eventNames.includes(constant.DEFAULT_MODEL_EVENT)) {
+          if (eventNames.includes(constant.MODEL_VALUE_EVENT)) {
             // this.$emit(
             //   "change",
             //   utils.deepCopy(this._esFormValue),
@@ -1107,7 +1107,7 @@ export default {
       // 缓存，以便多次调用
       this._esFormValue = formValue;
 
-      this.__execEmit(constant.DEFAULT_MODEL_EVENT, [
+      this.__execEmit(constant.MODEL_VALUE_EVENT, [
         utils.deepCopy(formValue),
         sourcePathKey ? sourcePathKey : false
       ]);
@@ -1143,14 +1143,11 @@ export default {
           rules = schema.array.rules;
           fromArray = true;
         }
-        curModelEvent = constant.DEFAULT_MODEL_EVENT;
+        curModelEvent = constant.MODEL_VALUE_EVENT;
       } else {
         rules = schema.rules;
         fromArray = false;
-        curModelEvent = getModelEvent(
-          schema.component,
-          constant.DEFAULT_MODEL_EVENT
-        );
+        curModelEvent = getModelEvent(schema.component);
       }
 
       if (!rules) {

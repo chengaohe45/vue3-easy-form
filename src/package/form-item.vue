@@ -810,7 +810,7 @@ export default {
      */
     formArrayInput(targetValue, eventData) {
       var checkSchema = [this.schema];
-      var eventNames = [constant.DEFAULT_MODEL_EVENT, constant.CHANGE_EVENT];
+      var eventNames = [constant.MODEL_VALUE_EVENT, constant.CHANGE_EVENT];
 
       var options = {
         value: targetValue,

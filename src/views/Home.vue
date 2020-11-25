@@ -68,8 +68,22 @@ export default {
           array: {
             value: ["123"],
             rules: {
-              required: true
+              required: true,
+              checks: {
+                trigger: ["input"],
+                handler: function() {
+                  return "erro22222fr";
+                }
+              }
             }
+            // actions: [
+            //   {
+            //     trigger: ["input"],
+            //     handler: function(data) {
+            //       console.log("array update:value", data);
+            //     }
+            //   }
+            // ]
           },
 
           value: "首页位置"

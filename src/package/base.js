@@ -10,7 +10,11 @@
 import utils from "./libs/utils.js";
 import constant from "./libs/constant.js";
 import dataCache from "./libs/data-cache.js";
-import { parseComponent, getModelEvent } from "./libs/component-utils";
+import {
+  parseComponent,
+  getModelEvent,
+  needModelEvent
+} from "./libs/component-utils";
 
 import {
   h as createElement,
@@ -153,7 +157,7 @@ export default {
           }
         } else {
           Object.assign(newProps, configProps);
-          if (getModelEvent(config)) {
+          if (needModelEvent(config)) {
             // 有双向绑定事件，需要写model
             var newValue;
             if (utils.hasOwn("value", config)) {
@@ -393,7 +397,9 @@ export default {
       var _thisVm = this;
 
       var hasOwnValue = utils.hasOwn("value", config);
-      var modelValueEvent = getModelEvent(config); // v-model双向绑定事件
+      var modelValueEvent = needModelEvent(config)
+        ? getModelEvent(config)
+        : false; // v-model双向绑定事件
       var emitEvents;
       if (modelValueEvent) {
         // 不需要双向绑定事件
@@ -420,7 +426,6 @@ export default {
       emitEvents.forEach(eventName => {
         var onEventName = "on" + utils.firstUpper(eventName);
         if (eventName == modelValueEvent && hasOwnValue) {
-          // console.log("2 config.__emitEvents", eventName);
           emitOn[onEventName] = function(eventData) {
             var eventValue = _thisVm.__parseModelEvent(config, eventData);
             if (config.value !== eventValue) {
@@ -435,13 +440,6 @@ export default {
         }
       });
 
-      // if (Object.keys(emitOn).length > 0) {
-      //   return emitOn;
-      // } else {
-      //   _thisVm = undefined; // 没有关联清除
-      //   return null;
-      // }
-      // console.log("emitOn", emitOn);
       return emitOn;
     },
 

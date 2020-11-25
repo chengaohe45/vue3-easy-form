@@ -288,7 +288,7 @@ export function parseComponent(
 
   newComponent.actions = parseActions(
     component.actions,
-    getModelEvent(newComponent, constant.DEFAULT_MODEL_EVENT),
+    getModelEvent(newComponent),
     myPathKey
   ); // 要在model之后
   // 提取出所需要的监听事件（可以再次改造，如主组件去掉左中两边空格的事件就要重新改造合并）
@@ -307,7 +307,7 @@ export function parseComponent(
  * @param {*} actions
  * @param {*} myPathKey
  */
-export function parseActions(actions, modelEvent, myPathKey) {
+export function parseActions(actions, modelEvent, myPathKey, fromArray) {
   // 解析是否为特殊写法
   var newActions = [];
   if (
@@ -346,7 +346,7 @@ export function parseActions(actions, modelEvent, myPathKey) {
           ) {
             // newActions.push({trigger: actionInfos[0], handler: onlySubmit});
             newAction = {};
-            newTrigger = parseTrigger(actionInfos[0], modelEvent);
+            newTrigger = parseTrigger(actionInfos[0], modelEvent, fromArray);
             newAction.trigger =
               newTrigger && newTrigger.length > 0
                 ? newTrigger
@@ -361,7 +361,7 @@ export function parseActions(actions, modelEvent, myPathKey) {
         }
       } else if (utils.isFunc(tmpAction.handler)) {
         newAction = {};
-        newTrigger = parseTrigger(tmpAction.trigger, modelEvent);
+        newTrigger = parseTrigger(tmpAction.trigger, modelEvent, fromArray);
         newAction.trigger =
           newTrigger && newTrigger.length > 0
             ? newTrigger
@@ -389,8 +389,8 @@ export function parseActions(actions, modelEvent, myPathKey) {
  * 2. 事件组成的数组
  * @returns 返回数据组，没有时返回一个null
  */
-export function parseTrigger(trigger, modelEvent) {
-  modelEvent = modelEvent ? modelEvent : constant.DEFAULT_MODEL_EVENT;
+export function parseTrigger(trigger, modelEvent, fromArray) {
+  modelEvent = modelEvent ? modelEvent : constant.MODEL_VALUE_EVENT;
   var tmpTriggers;
   if (trigger === true) {
     trigger = modelEvent;
@@ -416,8 +416,13 @@ export function parseTrigger(trigger, modelEvent) {
         // 为空，直接写默认事件
         return constant.CLICK_EVENT;
       } else if (item.indexOf(".") === 0) {
-        // 只有修改，前面加默认事件
+        // 只有修饰，前面加默认事件
         return constant.CLICK_EVENT + item;
+      } else if (fromArray && item === "input") {
+        console.warn(
+          "数组配置中的input事件已经移除，事件名可用true或change代替"
+        );
+        return modelEvent;
       } else {
         // 合法
         return item;
@@ -543,18 +548,30 @@ export function parseFlex(flex, size) {
   return false;
 }
 
-export function getModelEvent(component, defaultEvent) {
+export function getModelEvent(component) {
   var componentName = component.name;
   if (utils.isStr(component.name)) {
     componentName = component.name.toLowerCase();
   }
 
-  if (constant.PLAIN_HTML_TAGS.includes(componentName)) {
-    return defaultEvent ? defaultEvent : "";
-  } else if (constant.FORM_INPUTS.includes(componentName)) {
+  if (constant.FORM_INPUTS.includes(componentName)) {
     return "input";
   } else {
     return "update:" + component.model;
+  }
+}
+
+export function needModelEvent(component) {
+  var componentName = component.name;
+  if (utils.isStr(component.name)) {
+    componentName = component.name.toLowerCase();
+  } else {
+    return true;
+  }
+  if (constant.PLAIN_HTML_TAGS.includes(componentName)) {
+    return false;
+  } else {
+    return true;
   }
 }
 

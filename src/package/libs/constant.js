@@ -103,7 +103,7 @@ let constant = {
 
   COM_TARGET_REF: "__comTarget__",
 
-  DEFAULT_MODEL_EVENT: "update:modelValue", // 系统默认的v-model事件
+  MODEL_VALUE_EVENT: "update:modelValue", // 系统默认的v-model事件
 
   // TRIM_EVENT: "blur"  // 去掉左右两边空格的触发时机
 
