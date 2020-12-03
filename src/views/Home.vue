@@ -6,14 +6,14 @@
       msg="Welcome to Your Vue.js App"
       @add-item="addItem"
     />
-    <es-form :schema="schema" @submit="formSubmit"></es-form>
+    <es-form ref="form" :schema="schema"></es-form>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import HelloWorld from "@/components/HelloWorld.vue";
-import test from "@/components/test.vue";
+// import test from "@/components/test.vue";
 // import easyForm from "@/package/index.vue";
 import utils from "@/package/libs/utils";
 // import {
@@ -35,27 +35,12 @@ export default {
         test: {
           label: "your test",
           component: {
-            name: test,
+            name: "a-input",
+            ref: "test",
             props: {
               placeholder: "Basic usage"
             },
-            scopedSlots: {
-              default: function() {
-                // console.log("data:", data);
-                return "div";
-              },
-              test: () => <span>234</span>
-            },
-            text: 0,
-            actions: [
-              {
-                trigger: ["click"],
-                handler: function(data) {
-                  console.log("input1", data);
-                  this.$emit("test", 123);
-                }
-              }
-            ]
+            text: "1"
           },
           rules: {
             required: true,
@@ -71,7 +56,7 @@ export default {
             }
           },
           array: {
-            value: ["123", "abc"],
+            value: ["123"],
             hasSort: true,
             hasCopy: true,
             rules: {
@@ -83,22 +68,153 @@ export default {
                 }
               }
             }
-            // actions: [
-            //   {
-            //     trigger: ["input"],
-            //     handler: function(data) {
-            //       console.log("array update:value", data);
-            //     }
-            //   }
-            // ]
           },
 
           value: "首页位置"
         },
+
+        test2: {
+          // hidden: true,
+          array: {
+            value: [{test21: "21", test22: "22"}],
+            hasSort: true,
+            hasCopy: true,
+            rules: {
+              required: true,
+              checks: {
+                trigger: ["input1"],
+                handler: function() {
+                  return "erro22222fr";
+                }
+              }
+            }
+          },
+          
+          properties: {
+            test21: {
+              label: "test21",
+              component: {
+                name: "a-input",
+                ref: "test21",
+                props: {
+                  placeholder: "Basic usage"
+                },
+                text: "1"
+              },
+              rules: {
+                required: true,
+                class: {
+                  a: true,
+                  b1: false
+                },
+                checks: {
+                  trigger: "true",
+                  handler: function() {
+                    return "errofr";
+                  }
+                }
+              },
+
+              col: 12,
+
+              value: "首页位置"
+            },
+
+            test22: {
+              hidden: "es: $index%2 ? true : false",
+              label: "test22",
+              component: {
+                ref: "test",
+                name: "a-input",
+                props: {
+                  placeholder: "Basic usage"
+                },
+                text: "1"
+              },
+
+              col: 12,
+
+              value: "首页位置"
+            },
+
+            test3: {
+              // hidden: true,
+              array: {
+                value: [{test21: "21", test22: "22"}],
+                hasSort: true,
+                hasCopy: true,
+                rules: {
+                  required: true,
+                  checks: {
+                    trigger: ["input1"],
+                    handler: function() {
+                      return "erro22222fr";
+                    }
+                  }
+                }
+              },
+              
+              properties: {
+                test31: {
+                  label: "test31",
+                  component: {
+                    name: "a-input",
+                    ref: "test31",
+                    props: {
+                      placeholder: "Basic usage"
+                    },
+                    text: "1"
+                  },
+                  rules: {
+                    required: true,
+                    class: {
+                      a: true,
+                      b1: false
+                    },
+                    checks: {
+                      trigger: "true",
+                      handler: function() {
+                        return "errofr";
+                      }
+                    }
+                  },
+
+                  col: 12,
+
+                  value: "首页位置"
+                },
+
+                test32: {
+                  hidden: "es: $index%2 || $root.checkbox ? true : false",
+                  label: "test32",
+                  component: {
+                    ref: "test",
+                    name: "a-input",
+                    props: {
+                      placeholder: "Basic usage"
+                    },
+                    text: "1"
+                  },
+
+                  col: 12,
+
+                  value: "首页位置"
+                }
+              }
+              
+            },
+          }
+          
+        },
+
+        
+
         name: {
+          hidden: "es: !!$root.checkbox",
           label: "div",
           component: {
-            name: "div",
+            name: "input",
+            // ref: "name",
             props: {
               value: "344"
             },
@@ -106,21 +222,21 @@ export default {
             text: "首页位置"
           }
         },
-        input: {
-          label: "input",
-          component: {
-            name: "input",
-            value: "首页位置",
-            actions: [
-              {
-                trigger: "input",
-                handler: function() {
-                  console.log("update:modelValue");
-                }
-              }
-            ]
-          }
-        },
+        // input: {
+        //   label: "input",
+        //   component: {
+        //     name: "input",
+        //     value: "首页位置",
+        //     actions: [
+        //       {
+        //         trigger: "input",
+        //         handler: function() {
+        //           console.log("update:modelValue");
+        //         }
+        //       }
+        //     ]
+        //   }
+        // },
         checkbox: {
           label: "checkbox",
           component: {
@@ -129,17 +245,18 @@ export default {
               type: "checkbox"
             },
             value: true,
-            actions: [
-              {
-                trigger: "input",
-                handler: function() {
-                  console.log("update:modelValue");
-                }
-              }
-            ]
+            // actions: [
+            //   {
+            //     trigger: "input",
+            //     handler: function() {
+            //       console.log("update:modelValue");
+            //     }
+            //   }
+            // ]
           }
         },
         radio: {
+          // hidden: "es: !!$root.checkbox",
           label: "radio",
           component: {
             name: "input",
@@ -158,56 +275,56 @@ export default {
             ]
           }
         },
-        textarea: {
-          label: "textarea",
-          component: {
-            name: "textarea",
-            props: {
-              // type: "radio",
-              // value: false
-            },
-            value: "true",
-            actions: [
-              {
-                trigger: "input",
-                handler: function() {
-                  console.log("update:modelValue");
-                }
-              }
-            ]
-          }
-        },
-        "a-input": {
-          label: "a-input",
-          component: {
-            name: "a-input",
-            props: {
-              placeholder: "Basic usage"
-            },
-            model: "value",
-            actions: [
-              {
-                trigger: "update:value",
-                handler: function() {
-                  console.log("123...");
-                }
-              },
-              {
-                trigger: "change.native",
-                handler: function() {
-                  console.log(1243);
-                }
-              },
-              "@enterSubmit",
-              "change=@submit"
-            ]
-          },
-          rules: {
-            required: true,
-            checks: 222
-          },
-          value: "首页位置"
-        }
+        // textarea: {
+        //   label: "textarea",
+        //   component: {
+        //     name: "textarea",
+        //     props: {
+        //       // type: "radio",
+        //       // value: false
+        //     },
+        //     value: "true",
+        //     actions: [
+        //       {
+        //         trigger: "input",
+        //         handler: function() {
+        //           console.log("update:modelValue");
+        //         }
+        //       }
+        //     ]
+        //   }
+        // },
+        // "a-input": {
+        //   label: "a-input",
+        //   component: {
+        //     name: "a-input",
+        //     props: {
+        //       placeholder: "Basic usage"
+        //     },
+        //     model: "value",
+        //     actions: [
+        //       {
+        //         trigger: "update:value",
+        //         handler: function() {
+        //           console.log("123...");
+        //         }
+        //       },
+        //       {
+        //         trigger: "change.native",
+        //         handler: function() {
+        //           console.log(1243);
+        //         }
+        //       },
+        //       // "@enterSubmit",
+        //       // "change=@submit"
+        //     ]
+        //   },
+        //   rules: {
+        //     required: true,
+        //     checks: 222
+        //   },
+        //   value: "首页位置"
+        // }
       }
     };
   },
@@ -254,11 +371,15 @@ export default {
   },
   methods: {
     formSubmit() {
-      console.log(arguments);
+      console.log("formSubmit:", arguments);
     },
-    addItem(value) {
-      console.log("value:", value);
-      this.$emit("add-item", 123);
+    formChange() {
+      console.log("formChange:", arguments);
+    },
+    addItem() {
+      // console.log("value:", value, arguments);
+      // this.$emit("add-item", 123);
+      console.log(this.$refs.form.getRef("test", true, 0));
     }
   }
 };

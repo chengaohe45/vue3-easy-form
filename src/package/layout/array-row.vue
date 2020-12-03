@@ -47,6 +47,7 @@
             <span class="es-required">*</span>
           </div>
           <div class="es-array-row-body">
+            <!-- refName的值有限制的：当为隐藏时 => true_key_index; 当为不隐藏时 => key_index -->
             <component
               v-if="
                 itemSchema.properties &&
@@ -60,7 +61,7 @@
                 v-for="(fieldSchema, fieldName) in itemSchema.properties"
                 v-slot:[fieldName]
               >
-                <slot :name="fieldName" :schema="fieldSchema"></slot>
+                <slot :name="fieldName" :refName="fieldSchema.hidden ? (fieldSchema.hidden + fieldName + '_' + index) : (fieldName + '_' + index)" :schema="fieldSchema"></slot>
               </template>
             </component>
             <es-object :schema="itemSchema" v-else-if="itemSchema.properties">
@@ -68,11 +69,11 @@
                 v-for="(fieldSchema, fieldName) in itemSchema.properties"
                 v-slot:[fieldName]
               >
-                <slot :name="fieldName" :schema="fieldSchema"></slot>
+                <slot :name="fieldName" :refName="fieldSchema.hidden ? (fieldSchema.hidden + fieldName + '_' + index) : (fieldName + '_' + index)" :schema="fieldSchema"></slot>
               </template>
             </es-object>
             <template v-else>
-              <slot :schema="itemSchema"></slot>
+              <slot :schema="itemSchema" :refName="itemSchema.hidden ? (itemSchema.hidden + '_' + index) : (index + '')"></slot>
             </template>
           </div>
           <div

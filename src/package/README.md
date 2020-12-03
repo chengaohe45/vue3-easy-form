@@ -11,3 +11,4 @@
 4. text for slots
 5. native事件
 6. array input改变
+7. getRef() 参数的改变

@@ -113,6 +113,7 @@
                 :name="fieldName"
                 :schema="fieldSchema"
                 :index="index"
+                :refName="fieldSchema.hidden ? (fieldSchema.hidden + fieldName + '_' + index) : (fieldName + '_' + index)"
               ></slot>
             </es-object-table>
           </td>

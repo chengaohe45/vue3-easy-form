@@ -412,6 +412,7 @@ import { getModelEvent } from "./libs/component-utils";
 
 export default {
   name: "esForm",
+  emits: ["change", "submit", "update:modelValue", "inited"],
   /* ====================== 生命周期 ====================== */
   created() {
     this.$data.canConsole = utils.isBool(this.hasConsole)
@@ -453,7 +454,7 @@ export default {
       csFormValue: null,
 
       formSchema: {}, // $data有这个值说明是es-form
-      isInited: false
+      isInited: false,
     };
   },
 
@@ -461,7 +462,7 @@ export default {
 
   components: {
     formItem,
-    consolePanel
+    consolePanel,
   },
 
   /* ====================== 数据绑定 ====================== */
@@ -477,11 +478,11 @@ export default {
       //   console.log("value: ", value);
       //   return value !== null;
       // },
-      default: () => ({})
+      default: () => ({}),
     },
 
     schema: {
-      type: Object
+      type: Object,
     },
 
     modelValue: {
@@ -489,14 +490,14 @@ export default {
       required: false,
       default: () => {
         return {};
-      }
+      },
     },
 
     hasConsole: {
       type: Boolean,
       required: false,
-      default: undefined // 不能设置true/false,因为没设置会去匹配global
-    }
+      default: undefined, // 不能设置true/false,因为没设置会去匹配global
+    },
   },
 
   /* ====================== 事件处理 ====================== */
@@ -504,11 +505,16 @@ export default {
   methods: {
     /**
      * @param name 索引值
+     * @param showAll 是否过滤空值，true为不需要
      * @param idxChain 组件所在的位置 如: 1,2 或 0
      */
-    getRef(name, idxChain) {
+    getRef(name, showAll, idxChain) {
+      if (utils.isNum(showAll) || utils.isStr(showAll)) {
+        idxChain = showAll;
+        showAll = false;
+      }
       // var start = +new Date();
-      var ref = this.$refs.formFrame.getRef(name);
+      var ref = this.$refs.formFrame.getRef(name, showAll);
       // console.log("ref: ", ref);
       if (ref && utils.isArr(ref)) {
         if (utils.isNum(idxChain)) {
@@ -612,11 +618,13 @@ export default {
       const MAX_TOTAL = 50;
       if (this._esHiddenLevel > MAX_TOTAL) {
         // 实际上不会这么深的(虽然理论上存在)
-        throw "解析$hidden:[" +
+        throw (
+          "解析$hidden:[" +
           pathKey +
           "]出错，系统执行$hidden超过" +
           MAX_TOTAL +
-          "次，可能为死循环";
+          "次，可能为死循环"
+        );
       }
 
       var curHiddenValue = false;
@@ -678,7 +686,7 @@ export default {
             idxChain: itemSchema.__info.idxChain,
             pathKey: itemSchema.__info.pathKey,
             rootSchema: rootSchema,
-            isHidden: dataCache.getHiddenFunc(this.$data.id)
+            isHidden: dataCache.getHiddenFunc(this.$data.id),
           };
 
           if (parse.smartEsValue(itemSchema.__rawHidden, parseSources)) {
@@ -762,7 +770,7 @@ export default {
     __initUi(schema) {
       this.$data.isInited = false;
       var tmpSchema = schemaUtils.completeSchema(schema, this.$data.id);
-      // console.log("tmpSchema", tmpSchema);
+      // console.log("--- tmpSchema ----", tmpSchema);
       // 取出schema中的值，用于重置
       this._esOriginalSchemaValue = utils.deepCopy(
         formUtils.getValue(tmpSchema)
@@ -994,7 +1002,7 @@ export default {
           idxChain: inputSchema.__info.idxChain,
           pathKey: inputSchema.__info.pathKey,
           rootSchema: this.$data.formSchema,
-          isHidden: dataCache.getHiddenFunc(this.$data.id)
+          isHidden: dataCache.getHiddenFunc(this.$data.id),
         };
         // 为什么要写这个，因为开发过程中，有些组件的默认值需要转化，导致会触发checkRules, 体验不好
         var checkedResult = this.__checkRules(
@@ -1019,35 +1027,27 @@ export default {
           ? inputSchema.array.actions
           : inputSchema.component.actions;
         if (actions) {
-          actions.forEach(action => {
+          actions.forEach((action) => {
             if (utils.isInter(action.trigger, eventNames)) {
               handlers.push(action.handler);
             }
           });
         }
 
-        if (
-          handlers.length > 0 ||
-          eventNames.includes(constant.MODEL_VALUE_EVENT)
-        ) {
+        if (handlers.length > 0 || mustUpdate) {
           // 这个可以记录是什么导致表单改变
           if (handlers.length > 0) {
             var infoData = Object.assign({ instance: this }, options);
-            handlers.forEach(handler => {
+            handlers.forEach((handler) => {
               handler.call(this, infoData);
             });
             infoData = null;
           }
 
-          if (eventNames.includes(constant.MODEL_VALUE_EVENT)) {
-            // this.$emit(
-            //   "change",
-            //   utils.deepCopy(this._esFormValue),
-            //   sourcePathKey
-            // );
+          if (mustUpdate) {
             this.__execEmit("change", [
               utils.deepCopy(this._esFormValue),
-              sourcePathKey
+              sourcePathKey,
             ]);
           }
         }
@@ -1065,7 +1065,7 @@ export default {
      */
     _handleEvents(handlers, options) {
       var infoData = Object.assign({ instance: this }, options);
-      handlers.forEach(handler => {
+      handlers.forEach((handler) => {
         handler.call(this, infoData);
       });
       infoData = null;
@@ -1095,7 +1095,7 @@ export default {
         global: this.global ? this.global : {}, // 防止null情况
         rootData: rootValue,
         rootSchema: this.$data.formSchema,
-        isHidden: dataCache.getHiddenFunc(this.$data.id)
+        isHidden: dataCache.getHiddenFunc(this.$data.id),
       };
 
       formUtils.analyzeUiProps(this.$data.formSchema, baseParseSources);
@@ -1109,7 +1109,7 @@ export default {
 
       this.__execEmit(constant.MODEL_VALUE_EVENT, [
         utils.deepCopy(formValue),
-        sourcePathKey ? sourcePathKey : false
+        sourcePathKey ? sourcePathKey : false,
       ]);
 
       // this.__execEmit(constant.INPUT_EVENT, [
@@ -1136,7 +1136,7 @@ export default {
      * false 不需要检查
      * string 是需要检查的，但不正确
      */
-    __checkRules: function(schema, value, triggers) {
+    __checkRules: function (schema, value, triggers) {
       var rules, fromArray, curModelEvent;
       if (schema.array) {
         if (schema.array.rules) {
@@ -1312,7 +1312,7 @@ export default {
       var actions = this.$data.formSchema.actions;
       if (actions) {
         var eventNames = [eventName];
-        actions.forEach(action => {
+        actions.forEach((action) => {
           if (utils.isInter(action.trigger, eventNames)) {
             handlers.push(action.handler);
           }
@@ -1321,7 +1321,7 @@ export default {
 
       if (handlers.length > 0) {
         // schema中存在表单事件，不需要往上派发
-        handlers.forEach(handler => {
+        handlers.forEach((handler) => {
           handler.apply(this, params);
         });
       }
@@ -1329,7 +1329,7 @@ export default {
       // 往上派发
       params.unshift(eventName);
       this.$emit.apply(this, params);
-    }
+    },
   },
 
   watch: {
@@ -1340,7 +1340,7 @@ export default {
           this.__initUi(newVal);
         }
       },
-      deep: false
+      deep: false,
     },
 
     //watch是异步监听的，而$emit("input"...)是同步的
@@ -1353,7 +1353,7 @@ export default {
           // ...
         }
       },
-      deep: false
+      deep: false,
     },
 
     global: {
@@ -1383,8 +1383,8 @@ export default {
           this.__syncValue();
         }
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
 
   beforeUnmount() {
@@ -1392,6 +1392,6 @@ export default {
     this._esOriginalSchemaValue = null;
     this._esFormValue = null;
     dataCache.remove(this.$data.id);
-  }
+  },
 };
 </script>
