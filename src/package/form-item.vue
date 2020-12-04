@@ -129,7 +129,6 @@
           v-else-if="schema.properties"
           :is="'es-object'"
           :schema="schema"
-          ref="testNode"
         >
           <template
             v-for="(fieldSchema, fieldName) in schema.properties"
@@ -306,7 +305,7 @@
           <!-- 数组-非叶子(若有) -->
           <template
             v-for="(fieldSchema, fieldName) in schema.properties"
-            v-slot[fieldName]="props"
+            v-slot:[fieldName]="props"
             :key="fieldName"
           >
             <form-item

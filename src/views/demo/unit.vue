@@ -28,8 +28,8 @@ export default {
             component: {
               name: "el-date-picker",
               props: {
-                type: "year",
-                valueFormat: "yyyy"
+                // type: "year",
+                // valueFormat: "yyyy"
               },
               flex: "full"
             },

@@ -1,6 +1,6 @@
 <template>
   <el-menu
-    :default-active="defaultActive"
+    :default-active="$route.path"
     :router="true"
     class="nav-box"
     background-color="#324157"
@@ -53,7 +53,7 @@ export default {
 
   data: function() {
     return {
-      defaultActive: "/", // defaultActive不能二次变化，变化程序有问题（跟vue2不同，vue2不会报错）
+      // defaultActive: "/", // defaultActive不能二次变化，变化程序有问题（跟vue2不同，vue2不会报错）
       navList: navRoute.getNav()
     };
   },
@@ -62,33 +62,35 @@ export default {
 
   created() {
     // console.log(this.$route, this.$router);  // 无论url怎么，初始化时都是$route.path='/',这个跟vue2不同
-    // this.navList = navRoute.getNav();
-    var hash = location.hash + "";
-    var path = hash.substr(1);
-    if (path) {
-      var querychar = "?";
-      var queryPosition = path.indexOf(querychar);
-      if (queryPosition >= 0) {
-        path = path.substr(0, queryPosition);
-      }
-      this.defaultActive = path;
-    }
+    // // this.navList = navRoute.getNav();
+    // var hash = location.hash + "";
+    // var path = hash.substr(1);
+    // if (path) {
+    //   var querychar = "?";
+    //   var queryPosition = path.indexOf(querychar);
+    //   if (queryPosition >= 0) {
+    //     path = path.substr(0, queryPosition);
+    //   }
+    //   this.defaultActive = path;
+    // }
     // console.log(this.$route.path);
   },
 
-  mounted() {},
+  mounted() {
+    // console.log(2, this.$route, this.$router);
+  },
 
   unmounted() {},
 
   methods: {},
 
   watch: {
-    $route: function() {
-      // setTimeout(() => {
-      //   console.log("this.$route", this.$route, this.$router);
-      //   this.defaultActive = this.$route.path;
-      // }, 2000)
-    }
+    // $route: function() {
+    //   // setTimeout(() => {
+    //   //   console.log("this.$route", this.$route, this.$router);
+    //   //   this.defaultActive = this.$route.path;
+    //   // }, 2000)
+    // }
   }
 };
 </script>

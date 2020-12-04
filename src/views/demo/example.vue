@@ -45,7 +45,7 @@ export default {
             }
           },
           regions: {
-            value: "",
+            value: [2],
             label: "活动区域",
             component: {
               name: Select,

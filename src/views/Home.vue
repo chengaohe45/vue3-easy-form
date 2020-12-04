@@ -6,7 +6,16 @@
       msg="Welcome to Your Vue.js App"
       @add-item="addItem"
     />
-    <es-form ref="form" :schema="schema"></es-form>
+    <!-- <es-form ref="form" :schema="schema"></es-form> -->
+    <div style="overflow: hidden;">
+      <g-select
+        v-model="selectValue"
+        :options="options"
+        multiple
+        clearable
+        placeholder="请选择活动区域"
+      ></g-select>
+    </div>
   </div>
 </template>
 
@@ -31,6 +40,11 @@ export default {
   },
   data() {
     return {
+      selectValue: [2],
+      options: [
+        { text: "区域1", id: 1 },
+        { text: "区域2", id: 2 }
+      ],
       schema: {
         test: {
           label: "your test",
