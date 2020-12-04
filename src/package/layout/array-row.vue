@@ -61,7 +61,15 @@
                 v-for="(fieldSchema, fieldName) in itemSchema.properties"
                 v-slot:[fieldName]
               >
-                <slot :name="fieldName" :refName="fieldSchema.hidden ? (fieldSchema.hidden + fieldName + '_' + index) : (fieldName + '_' + index)" :schema="fieldSchema"></slot>
+                <slot
+                  :name="fieldName"
+                  :refName="
+                    fieldSchema.hidden
+                      ? fieldSchema.hidden + fieldName + '_' + index
+                      : fieldName + '_' + index
+                  "
+                  :schema="fieldSchema"
+                ></slot>
               </template>
             </component>
             <es-object :schema="itemSchema" v-else-if="itemSchema.properties">
@@ -69,11 +77,26 @@
                 v-for="(fieldSchema, fieldName) in itemSchema.properties"
                 v-slot:[fieldName]
               >
-                <slot :name="fieldName" :refName="fieldSchema.hidden ? (fieldSchema.hidden + fieldName + '_' + index) : (fieldName + '_' + index)" :schema="fieldSchema"></slot>
+                <slot
+                  :name="fieldName"
+                  :refName="
+                    fieldSchema.hidden
+                      ? fieldSchema.hidden + fieldName + '_' + index
+                      : fieldName + '_' + index
+                  "
+                  :schema="fieldSchema"
+                ></slot>
               </template>
             </es-object>
             <template v-else>
-              <slot :schema="itemSchema" :refName="itemSchema.hidden ? (itemSchema.hidden + '_' + index) : (index + '')"></slot>
+              <slot
+                :schema="itemSchema"
+                :refName="
+                  itemSchema.hidden
+                    ? itemSchema.hidden + '_' + index
+                    : index + ''
+                "
+              ></slot>
             </template>
           </div>
           <div

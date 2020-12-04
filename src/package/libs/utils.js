@@ -5,9 +5,9 @@ let utils = {
   // __Vue: null,
   __key: 0,
 
-  initVue() {
-    // this.__Vue = Vue;
-  },
+  // initVue() {
+  //   // this.__Vue = Vue;
+  // },
   /**
    * unicode letters used for parsing html tags, component names and property paths.
    * using https://www.w3.org/TR/html53/semantics-scripting.html#potentialcustomelementname

@@ -38,7 +38,7 @@
     <div
       :class="[
         'es-form-body',
-        schema.ui && schema.ui.hasBorder ? 'es-body-border' : '',
+        schema.ui && schema.ui.hasBorder ? 'es-body-border' : ''
       ]"
       v-show="!schema.properties || schema.ui.showBody"
       :style="bodyStyle"
@@ -51,7 +51,7 @@
             'es-form-component',
             schema.component.align
               ? 'es-form-component-' + schema.component.align
-              : '',
+              : ''
           ]"
           v-if="schema.component"
         >
@@ -60,7 +60,7 @@
               'es-form-component-wrap',
               schema.component.flex
                 ? 'es-form-wrap-' + schema.component.flex
-                : '',
+                : ''
             ]"
           >
             <es-base
@@ -68,7 +68,7 @@
               :class="[
                 schema.component.flex
                   ? 'es-form-component-' + schema.component.flex
-                  : '',
+                  : ''
               ]"
               :info="schema.__info"
               :is-main="true"
@@ -111,7 +111,7 @@
             <form-item
               :ref="
                 fieldSchema.__hasRef
-                  ? (el) => {
+                  ? el => {
                       __recordItemRef(
                         !fieldSchema.hidden ? el : null,
                         fieldName
@@ -139,7 +139,7 @@
             <form-item
               :ref="
                 fieldSchema.__hasRef
-                  ? (el) => {
+                  ? el => {
                       __recordItemRef(
                         !fieldSchema.hidden ? el : null,
                         fieldName
@@ -171,7 +171,7 @@
             <form-item
               :ref="
                 fieldSchema.__hasRef
-                  ? (el) => {
+                  ? el => {
                       __recordItemRef(el, props.refName, true);
                     }
                   : null
@@ -187,7 +187,7 @@
               <form-item
                 :ref="
                   schema.__hasRef
-                    ? (el) => {
+                    ? el => {
                         __recordItemRef(el, props.refName, true);
                       }
                     : null
@@ -214,7 +214,7 @@
             <form-item
               :ref="
                 fieldSchema.__hasRef
-                  ? (el) => {
+                  ? el => {
                       __recordItemRef(el, props.refName, true);
                     }
                   : null
@@ -230,7 +230,7 @@
               <form-item
                 :ref="
                   schema.__hasRef
-                    ? (el) => {
+                    ? el => {
                         __recordItemRef(el, props.refName, true);
                       }
                     : null
@@ -257,7 +257,7 @@
               <form-item
                 :ref="
                   schema.__hasRef
-                    ? (el) => {
+                    ? el => {
                         __recordItemRef(el, props.refName, true);
                       }
                     : null
@@ -284,7 +284,7 @@
             <form-item
               :ref="
                 fieldSchema.__hasRef
-                  ? (el) => {
+                  ? el => {
                       __recordItemRef(el, props.refName, true);
                     }
                   : null
@@ -312,7 +312,7 @@
             <form-item
               :ref="
                 fieldSchema.__hasRef
-                  ? (el) => {
+                  ? el => {
                       __recordItemRef(el, props.refName, true);
                     }
                   : null
@@ -328,7 +328,7 @@
               <form-item
                 :ref="
                   schema.__hasRef
-                    ? (el) => {
+                    ? el => {
                         __recordItemRef(el, props.refName, true);
                       }
                     : null
@@ -622,7 +622,6 @@ import { getModelEvent } from "./libs/component-utils";
 
 import { markRaw } from "vue";
 
-
 export default {
   name: "form-item", // 声明name可以嵌套自身
   mixins: [itemMixin],
@@ -633,7 +632,7 @@ export default {
       // showBody: true,
       // isChanged: false,
       // triggerList: []
-      refRecord: markRaw({}),
+      refRecord: markRaw({})
     };
   },
 
@@ -645,7 +644,7 @@ export default {
     arrayTabs,
     arrayCard,
     arrayLegend,
-    tabs,
+    tabs
   },
 
   created() {},
@@ -678,13 +677,13 @@ export default {
           style = {
             padding: this.schema.ui.padding
               ? this.schema.ui.padding
-              : Math.min(this.schema.ui.rowSpace, 10) + "px",
+              : Math.min(this.schema.ui.rowSpace, 10) + "px"
           }; //有边框时的样式
         } else {
           style = {
             padding: this.schema.ui.padding
               ? this.schema.ui.padding
-              : Math.min(this.schema.ui.rowSpace, 10) + "px 0 0 0",
+              : Math.min(this.schema.ui.rowSpace, 10) + "px 0 0 0"
           }; //无边框时的样式
         }
       } else {
@@ -692,12 +691,12 @@ export default {
           style = {
             padding: this.schema.ui.padding
               ? this.schema.ui.padding
-              : Math.min(this.schema.ui.rowSpace, 10) + "px",
+              : Math.min(this.schema.ui.rowSpace, 10) + "px"
           }; //有边框时的样式
         }
       }
       return style;
-    },
+    }
   },
 
   beforeUpdate() {
@@ -716,7 +715,6 @@ export default {
     },
 
     getRef(name, showAll) {
-      
       function filterTarget(targets) {
         var copyTargets = [];
         targets.forEach(function(target) {
@@ -736,7 +734,8 @@ export default {
       var info = this.__getLastRefs(name, ignoreKeys);
       var refTarget = info && info.target ? info.target : null;
       // console.log("ignoreKeys: ", ignoreKeys);
-      if (utils.isArr(refTarget) && !showAll) { // 去掉null(为了以后的扩展，才这样返回)
+      if (utils.isArr(refTarget) && !showAll) {
+        // 去掉null(为了以后的扩展，才这样返回)
         refTarget = filterTarget(refTarget);
       }
       ignoreKeys = null;
@@ -745,7 +744,6 @@ export default {
 
     /* 取出最后的，跟vue ref保持一致；也就是后面的会代表前面的 */
     __getLastRefs(name, ignoreKeys) {
-
       var newTargetInfo, nextTargetInfo, props, key;
 
       if (!this.schema.array) {
@@ -777,7 +775,7 @@ export default {
           if (refTarget) {
             newTargetInfo = {
               target: refTarget.$refs[constant.COM_TARGET_REF],
-              sourceKey: this.schema.__info.pathKey.replace(/\[\d+\]/g, "[i]"),
+              sourceKey: this.schema.__info.pathKey.replace(/\[\d+\]/g, "[i]")
             };
           } else {
             newTargetInfo = null;
@@ -792,7 +790,7 @@ export default {
             var arrayRecord = standardRecord[key];
             if (arrayRecord) {
               var nextTargetInfos = [];
-              this.schema.__propSchemaList.forEach(function (item, index) {
+              this.schema.__propSchemaList.forEach(function(item, index) {
                 if (arrayRecord[index]) {
                   var tmpNextTargetInfo = arrayRecord[index].__getLastRefs(
                     name,
@@ -813,12 +811,13 @@ export default {
 
               // 取最后一个
               var lastSourceKey;
-              nextTargetInfos.forEach(function (nextTargetInfo) {
+              nextTargetInfos.forEach(function(nextTargetInfo) {
                 if (nextTargetInfo) {
                   lastSourceKey = nextTargetInfo.sourceKey;
                 }
               });
-              if (lastSourceKey) {  // 存在目标组件
+              if (lastSourceKey) {
+                // 存在目标组件
                 if (
                   newTargetInfo &&
                   !ignoreKeys.includes(newTargetInfo.sourceKey)
@@ -827,19 +826,25 @@ export default {
                 }
 
                 var tmpTargets = [];
-                nextTargetInfos.forEach(function (nextTargetInfo) {
-                  if (nextTargetInfo && nextTargetInfo.sourceKey === lastSourceKey) {
+                nextTargetInfos.forEach(function(nextTargetInfo) {
+                  if (
+                    nextTargetInfo &&
+                    nextTargetInfo.sourceKey === lastSourceKey
+                  ) {
                     var target = nextTargetInfo.target;
                     // if (utils.isArr(target)) {
                     //   tmpTargets = tmpTargets.concat(target);
                     // } else {
-                      tmpTargets.push(target);
+                    tmpTargets.push(target);
                     // }
                   } else {
-                    tmpTargets.push(null);  // 占位，把个数补充完整
+                    tmpTargets.push(null); // 占位，把个数补充完整
                   }
                 });
-                newTargetInfo = { target: tmpTargets, sourceKey: lastSourceKey };  // 后面的代替前面的，跟原生vue ref保持一致
+                newTargetInfo = {
+                  target: tmpTargets,
+                  sourceKey: lastSourceKey
+                }; // 后面的代替前面的，跟原生vue ref保持一致
               }
             }
           }
@@ -856,13 +861,13 @@ export default {
                 newTargetInfo.target.push(tmpTargetInfo.target);
                 newTargetInfo.sourceKey = tmpTargetInfo.sourceKey;
               } else {
-                newTargetInfo.target.push(null);  // 占位，把个数补充完整
+                newTargetInfo.target.push(null); // 占位，把个数补充完整
               }
             } else {
-              newTargetInfo.target.push(null);  // 占位，把个数补充完整
+              newTargetInfo.target.push(null); // 占位，把个数补充完整
             }
           });
-          var hasTarget = newTargetInfo.target.some(function (item) {
+          var hasTarget = newTargetInfo.target.some(function(item) {
             return !!item;
           });
           if (!hasTarget) {
@@ -879,7 +884,6 @@ export default {
       }
       return newTargetInfo;
     },
-
 
     __recordItemRef(el, refName, fromArray) {
       var isHidden = false;
@@ -953,7 +957,7 @@ export default {
         pathKey: this.schema.__info.pathKey,
         index: this.schema.__info.index,
         idxChain: this.schema.__info.idxChain,
-        target: target,
+        target: target
       };
 
       var form = this.__getForm();
@@ -976,7 +980,7 @@ export default {
         pathKey: this.schema.__info.pathKey,
         index: this.schema.__info.index,
         idxChain: this.schema.__info.idxChain,
-        target: null,
+        target: null
       };
 
       var form = this.__getForm();
@@ -996,9 +1000,9 @@ export default {
         }
         formItem = formItem.$parent;
       }
-    },
+    }
   },
 
-  watch: {},
+  watch: {}
 };
 </script>

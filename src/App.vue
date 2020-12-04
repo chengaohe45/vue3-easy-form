@@ -1,30 +1,122 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <!-- <div class="sys-window"> -->
+  <!-- <sys-header></sys-header> -->
+  <div class="sys-win-body">
+    <transition name="nav-slide">
+      <div class="sys-nav-slide" style="width: 210px;">
+        <!-- <sys-header></sys-header> -->
+        <sys-nav></sys-nav>
+      </div>
+    </transition>
+    <div class="sys-body">
+      <div class="sys-body-cont">
+        <router-view></router-view>
+      </div>
+    </div>
   </div>
-  <router-view />
+  <!-- </div> -->
 </template>
 
+<script>
+// import utils from "@/libs/utils";
+
+// import sysHeader from "@/components/common/header";
+import sysNav from "@/components/common/nav";
+
+// import utils from "@/libs/utils";
+// import listeners from "@/libs/listeners";
+// import constant from "@/libs/constant";
+
+export default {
+  props: {},
+
+  data: function() {
+    return {};
+  },
+
+  computed: {},
+
+  mounted() {},
+
+  unmounted() {},
+
+  created() {},
+
+  methods: {},
+  components: {
+    // sysHeader,
+    sysNav
+  }
+};
+</script>
+
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+@import "@/static/css/mixins.scss";
+
+// .sys-window {
+//   height: 100%;
+//   @include display-flex;
+//   @include direction-v;
+// }
+body > #app {
+  height: 100%;
 }
 
-#nav {
-  padding: 30px;
+.sys-win-body {
+  @include display-flex;
+  @include direction-h;
+  // @include flex-full;
+  height: 100%;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+  .sys-nav-slide {
+    display: block;
+    @include flex-fixed;
+    @include border-box;
+    margin: 0;
+    padding: 0;
+    background-color: #324157;
+    text-align: left;
+    /*width: $g_navAsideWidth;*/
+    border-right: 1px solid #e6e6e6;
+    overflow: auto;
+  }
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  .sys-body {
+    @include display-flex;
+    @include direction-v;
+    @include flex-full;
+    overflow: hidden;
+  }
+
+  .sys-body-cont {
+    overflow: auto;
+    @include flex-full;
+    height: 100%;
+  }
+
+  .sys-danger {
+    color: #f56c6c;
+  }
+}
+
+/* 设置持续时间和动画函数 */
+.nav-slide-enter-active {
+  /*transition: all 0.3s ease;*/
+  animation: slide-bounce-in 0.3s ease-out;
+}
+.nav-slide-leave-active {
+  /*transition: all .3s ease;*/
+  animation: slide-bounce-in 0.3s ease-in-out reverse;
+}
+
+@keyframes slide-bounce-in {
+  0% {
+    width: 0px;
+    opacity: 0;
+  }
+  100% {
+    width: $g_navAsideWidth;
+    opacity: 1;
   }
 }
 </style>

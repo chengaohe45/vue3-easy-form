@@ -12,7 +12,7 @@ const install = function(Vue, globalOpts = {}) {
   if (install.installed) return;
 
   // 保存外部传入来的Vue(如用来判断vnode)
-  esUtils.initVue(Vue);
+  // esUtils.initVue(Vue);
 
   if (Object.keys(globalOpts).length > 0) {
     esUtils.mergeGlobal(esGlobal, globalOpts);

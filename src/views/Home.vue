@@ -76,7 +76,7 @@ export default {
         test2: {
           // hidden: true,
           array: {
-            value: [{test21: "21", test22: "22"}],
+            value: [{ test21: "21", test22: "22" }],
             hasSort: true,
             hasCopy: true,
             rules: {
@@ -89,7 +89,7 @@ export default {
               }
             }
           },
-          
+
           properties: {
             test21: {
               label: "test21",
@@ -140,7 +140,7 @@ export default {
             test3: {
               // hidden: true,
               array: {
-                value: [{test21: "21", test22: "22"}],
+                value: [{ test21: "21", test22: "22" }],
                 hasSort: true,
                 hasCopy: true,
                 rules: {
@@ -153,7 +153,7 @@ export default {
                   }
                 }
               },
-              
+
               properties: {
                 test31: {
                   label: "test31",
@@ -201,13 +201,9 @@ export default {
                   value: "首页位置"
                 }
               }
-              
-            },
+            }
           }
-          
         },
-
-        
 
         name: {
           hidden: "es: !!$root.checkbox",
@@ -244,7 +240,7 @@ export default {
             props: {
               type: "checkbox"
             },
-            value: true,
+            value: true
             // actions: [
             //   {
             //     trigger: "input",
@@ -274,7 +270,7 @@ export default {
               }
             ]
           }
-        },
+        }
         // textarea: {
         //   label: "textarea",
         //   component: {

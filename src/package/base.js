@@ -25,7 +25,7 @@ import {
 } from "vue";
 
 export default {
-  // name: "esBase",
+  // name: "es-base",
   render: function() {
     return this.renderUi(this.config, false, constant.COM_TARGET_REF);
   },

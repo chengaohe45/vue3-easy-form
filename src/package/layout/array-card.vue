@@ -89,7 +89,12 @@
           </div>
         </div>
         <div class="es-array-row-body">
-          <slot :schema="itemSchema" :refName="itemSchema.hidden ? (itemSchema.hidden + '_' + index) : (index + '')"></slot>
+          <slot
+            :schema="itemSchema"
+            :refName="
+              itemSchema.hidden ? itemSchema.hidden + '_' + index : index + ''
+            "
+          ></slot>
         </div>
       </li>
     </ul>

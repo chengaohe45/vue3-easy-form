@@ -7,9 +7,7 @@
  *
  */
 
-import { util } from "chai";
-
-// import utils from "./utils";
+import utils from "./utils";
 
 var formDataMap = {};
 // window.formDataMap = formDataMap;
@@ -52,7 +50,7 @@ let dataCache = {
   },
 
   remove(formId) {
-    if (util.hasOwn(formId, formDataMap)) {
+    if (utils.hasOwn(formId, formDataMap)) {
       formDataMap[formId].hiddenFunc = null;
       delete formDataMap[formId];
     }
