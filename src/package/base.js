@@ -448,7 +448,7 @@ export default {
       if (scopedSlots) {
         var newScopedSlots = {};
         for (var key in scopedSlots) {
-          newScopedSlots[key] = this.newSlotFunc(key, scopedSlots[key], pref);
+          newScopedSlots[key] = this.newSlotFunc(config, key, scopedSlots[key], pref);
         }
         // console.log("newScopedSlots", config.name, Object.keys(newScopedSlots));
         return newScopedSlots;
@@ -457,7 +457,7 @@ export default {
       }
     },
 
-    newSlotFunc(key, slotValue, pref) {
+    newSlotFunc(currentConfig, key, slotValue, pref) {
       var vm = this;
       return function(scoped) {
         // console.log("scoped", scoped);
@@ -500,10 +500,10 @@ export default {
 
         if (
           key === "default" &&
-          vm.config.text !== undefined &&
-          vm.config.text !== null
+          currentConfig.text !== undefined &&
+          currentConfig.text !== null
         ) {
-          vnodes.unshift(vm.config.text);
+          vnodes.unshift(currentConfig.text);
         }
 
         var newVNode,

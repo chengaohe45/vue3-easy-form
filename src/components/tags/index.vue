@@ -2,7 +2,7 @@
   <div class="dynamic-tags">
     <el-tag
       :key="tag + '-' + index"
-      v-for="(tag, index) in value"
+      v-for="(tag, index) in comVal"
       :closable="!disabled"
       :disable-transitions="true"
       @close="handleClose(tag)"
@@ -15,7 +15,7 @@
       v-model="inputValue"
       ref="saveTagInput"
       size="small"
-      @keyup.enter.native="handleInputConfirm"
+      @keyup.enter="handleInputConfirm"
       @blur="handleInputConfirm"
     >
     </el-input>
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import utils from "@/libs/utils";
 /**
  * 可通过this.$emit('notify-submit')通知提交数据事件
  */
@@ -37,7 +38,8 @@ export default {
   /* ====================== 生命周期 ====================== */
 
   created() {
-    console.log("tags组件生成了...");
+    // console.log("tags组件生成了...");
+    this.comVal = utils.deepCopy(this.modelValue);
   },
 
   /* ====================== 数据绑定 ====================== */
@@ -45,7 +47,8 @@ export default {
   data() {
     return {
       inputVisible: false,
-      inputValue: ""
+      inputValue: "",
+      comVal: []
     };
   },
 
@@ -56,7 +59,7 @@ export default {
       default: false
     },
 
-    value: {
+    modelValue: {
       type: Array,
       required: false,
       default: () => {
@@ -72,9 +75,9 @@ export default {
   },
 
   watch: {
-    value(newVal) {
-      if (JSON.stringify(this.value) != JSON.stringify(newVal)) {
-        this.value = newVal;
+    modelValue(newVal) {
+      if (JSON.stringify(this.comVal) !== JSON.stringify(newVal)) {
+        this.comVal = utils.deepCopy(this.modelValue);
       }
     }
   },
@@ -83,10 +86,10 @@ export default {
 
   methods: {
     handleClose(tag) {
-      this.value.splice(this.value.indexOf(tag), 1);
+      this.comVal.splice(this.comVal.indexOf(tag), 1);
       this.$emit("close", tag);
-      this.$emit("input", this.value);
-      this.$emit("change", this.value);
+      this.$emit("update:modelValue", this.comVal);
+      this.$emit("change", this.comVal);
     },
 
     showInput() {
@@ -100,10 +103,10 @@ export default {
       let inputValue = this.inputValue;
       inputValue = inputValue.replace(/^(\s|\n|\t)+|(\s|\n|\t)+$/g, "");
       if (inputValue) {
-        if (!this.value.includes(inputValue)) {
-          this.value.push(inputValue);
-          this.$emit("input", this.value);
-          this.$emit("change", this.value);
+        if (!this.comVal.includes(inputValue)) {
+          this.comVal.push(inputValue);
+          this.$emit("input", this.comVal);
+          this.$emit("change", this.comVal);
         } else {
           this.$message({
             message: '"' + inputValue + '" 已存在',

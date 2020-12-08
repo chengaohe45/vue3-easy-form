@@ -50,6 +50,9 @@ export default {
           direction: "v", // 上下排版
           component: {
             name: "el-color-picker",
+            props: {
+              "show-alpha": true
+            },
             flex: "self", // 设置了flex=self是为了项组件区域的宽度就是组件的宽度
             align: "center" // 组件居中
           },

@@ -768,7 +768,7 @@ export default {
     __initUi(schema) {
       this.$data.isInited = false;
       var tmpSchema = schemaUtils.completeSchema(schema, this.$data.id);
-      // console.log("--- tmpSchema ----", tmpSchema);
+      // console.log("--- tmpSchema ----", utils.deepCopy(tmpSchema));
       // 取出schema中的值，用于重置
       this._esOriginalSchemaValue = utils.deepCopy(
         formUtils.getValue(tmpSchema)

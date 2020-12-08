@@ -106,6 +106,7 @@ export default {
       }
     };
   },
+  emits: ["click-active"],
   props: {
     // tabsName: {
     //   type: String,
