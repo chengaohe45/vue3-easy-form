@@ -428,6 +428,11 @@ export default {
         if (eventName == modelValueEvent && hasOwnValue) {
           emitOn[onEventName] = function(eventData) {
             var eventValue = _thisVm.__parseModelEvent(config, eventData);
+            if (utils.isRefVal(eventValue)) {
+              // eventValue即使用是一个原始对象也没有关系，因为config.value会转化为Proxy
+              // console.log(eventValue, utils.deepCopy(eventValue));
+              eventValue = utils.deepCopy(eventValue);
+            }
             if (config.value !== eventValue) {
               config.value = eventValue;
               _thisVm.eventHandler(config, eventName, arguments, isMain, ref);
@@ -448,7 +453,12 @@ export default {
       if (scopedSlots) {
         var newScopedSlots = {};
         for (var key in scopedSlots) {
-          newScopedSlots[key] = this.newSlotFunc(config, key, scopedSlots[key], pref);
+          newScopedSlots[key] = this.newSlotFunc(
+            config,
+            key,
+            scopedSlots[key],
+            pref
+          );
         }
         // console.log("newScopedSlots", config.name, Object.keys(newScopedSlots));
         return newScopedSlots;

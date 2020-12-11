@@ -105,7 +105,7 @@ export default {
       if (inputValue) {
         if (!this.comVal.includes(inputValue)) {
           this.comVal.push(inputValue);
-          this.$emit("input", this.comVal);
+          this.$emit("update:modelValue", this.comVal);
           this.$emit("change", this.comVal);
         } else {
           this.$message({

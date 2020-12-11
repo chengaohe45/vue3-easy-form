@@ -52,7 +52,9 @@ export default {
     modelValue: {
       handler() {
         // console.log(utils.deepCopy(this.modelValue));
-        if (JSON.stringify(this.$data.comVal) != JSON.stringify(this.modelValue)) {
+        if (
+          JSON.stringify(this.$data.comVal) != JSON.stringify(this.modelValue)
+        ) {
           this.$data.comVal = utils.deepCopy(this.modelValue);
         }
       },

@@ -59,7 +59,7 @@ export default {
     return {
       selectValue: [2],
       color1: "#409EFF",
-      
+
       options: [
         { text: "区域1", id: 1 },
         { text: "区域2", id: 2 }
@@ -72,31 +72,31 @@ export default {
       ],
       schema: {
         regions: {
-            value: [2],
-            label: "活动区域",
-            component: {
-              name: "g-select",
-              props: {
-                placeholder: "请选择活动区域",
-                clearable: true,
-                multiple: true,
-                options: [
-                  { text: "区域1", id: 1 },
-                  { text: "区域2", id: 2 }
-                ]
-              },
-              actions: {
-                trigger: "change",
-                handler: function() {
-                  console.log("Select $listener");
-                }
-              }
+          value: [2],
+          label: "活动区域",
+          component: {
+            name: "g-select",
+            props: {
+              placeholder: "请选择活动区域",
+              clearable: true,
+              multiple: true,
+              options: [
+                { text: "区域1", id: 1 },
+                { text: "区域2", id: 2 }
+              ]
             },
-            rules: {
-              required: true,
-              emptyMsg: "请选择"
+            actions: {
+              trigger: "change",
+              handler: function() {
+                console.log("Select $listener");
+              }
             }
           },
+          rules: {
+            required: true,
+            emptyMsg: "请选择"
+          }
+        },
         // test: {
         //   label: "your test",
         //   component: {
