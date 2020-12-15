@@ -44,8 +44,8 @@ export default {
                 component: {
                   name: "el-date-picker",
                   props: {
-                    type: "datetime",
-                    valueFormat: "yyyy-MM-dd hh:mm:ss"
+                    type: "datetime"
+                    // valueFormat: "yyyy-MM-dd hh:mm:ss" // element-plus弃用了
                   },
                   flex: "full"
                 },
@@ -61,8 +61,8 @@ export default {
                 component: {
                   name: "el-date-picker",
                   props: {
-                    type: "datetime",
-                    valueFormat: "yyyy-MM-dd hh:mm:ss"
+                    type: "datetime"
+                    // valueFormat: "yyyy-MM-dd hh:mm:ss" // element-plus弃用了
                   },
                   flex: "full"
                 },

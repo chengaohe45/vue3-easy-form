@@ -65,11 +65,6 @@
           >
             <es-base
               :ref="schema.component.ref"
-              :class="[
-                schema.component.flex
-                  ? 'es-form-component-' + schema.component.flex
-                  : ''
-              ]"
               :info="schema.__info"
               :is-main="true"
               :config="schema.component"

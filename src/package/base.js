@@ -195,7 +195,24 @@ export default {
         }
 
         if (config.class) {
-          newProps.class = config.class;
+          if (!config.flex) {
+            newProps.class = config.class;
+          } else {
+            var configClass = utils.deepCopy(config.class);
+            var flexClass = "es-form-component-" + config.flex;
+            if (utils.isStr(configClass)) {
+              configClass = configClass + " " + flexClass;
+            } else if (utils.isArr(configClass)) {
+              configClass.push(flexClass);
+            } else if (utils.isObj(configClass)) {
+              configClass[flexClass] = true;
+            } else {
+              configClass = flexClass;
+            }
+            newProps.class = configClass;
+          }
+        } else if (config.flex) {
+          newProps.class = "es-form-component-" + config.flex;
         }
         if (config.style) {
           newProps.style = config.style;

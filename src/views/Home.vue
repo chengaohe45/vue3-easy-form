@@ -19,6 +19,7 @@
 
       <el-select
         v-model="selectValue2"
+        class="a12345"
         multiple
         clearable
         placeholder="请选择活动区域"
@@ -32,6 +33,13 @@
         </el-option>
       </el-select>
       <el-color-picker v-model="color1" show-alpha></el-color-picker>
+      <el-date-picker
+        class="a12345"
+        style="width: 300px;"
+        v-model="dateValue"
+        type="year"
+        placeholder="选择日期">
+      </el-date-picker>
     </div>
   </div>
 </template>
@@ -57,6 +65,7 @@ export default {
   },
   data() {
     return {
+      dateValue: "2000",
       selectValue: [2],
       color1: "#409EFF",
 

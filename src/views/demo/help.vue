@@ -50,8 +50,8 @@ export default {
               type: "datetimerange",
               rangeSeparator: "至",
               startPlaceholder: "开始日期",
-              endPlaceholder: "结束日期",
-              valueFormat: "yyyy-MM-dd"
+              endPlaceholder: "结束日期"
+              // valueFormat: "yyyy-MM-dd"  // element-plus弃用了
             },
             flex: "full"
           },
