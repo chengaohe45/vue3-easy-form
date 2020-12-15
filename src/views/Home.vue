@@ -38,7 +38,8 @@
         style="width: 300px;"
         v-model="dateValue"
         type="year"
-        placeholder="选择日期">
+        placeholder="选择日期"
+      >
       </el-date-picker>
     </div>
   </div>
