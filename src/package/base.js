@@ -30,6 +30,7 @@ export default {
     return this.renderUi(this.config, false, constant.COM_TARGET_REF);
   },
   // inheritAttrs: false,
+  emits: ["trigger"],
   props: {
     config: {
       type: Object,
