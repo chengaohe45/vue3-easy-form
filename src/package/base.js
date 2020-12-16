@@ -272,17 +272,6 @@ export default {
         throw "es-base config当是一个函数时，其返回值必须是一个虚拟节点或字符串";
       }
 
-      // 这个不能删除：vue机制，主要是为了执行config.__refreshIndex；当表单改变时，同步更新页面
-      if (
-        !isSlotCom &&
-        config &&
-        config.__refreshIndex
-        // this.__slotUpdateTime
-      ) {
-        // 永远都不会进入这，因为__slotUpdateTime没有值的
-        // this.__slotUpdateTime++;
-      }
-
       var directives = config.directives;
       // ? utils.deepCopy(config.directives)
       // : []; // false, 不是数组也没有事
@@ -493,6 +482,9 @@ export default {
         // console.log("scoped", scoped);
         var vnodes;
         if (utils.isFunc(slotValue)) {
+          if (currentConfig.__refreshIndex) {
+            // 这个不能删除：vue机制，主要是为了执行config.__refreshIndex；当表单改变时，同步更新页面
+          }
           var options = {
             global: dataCache.getGlobal(vm.config.__formId),
             rootData: dataCache.getRoot(vm.config.__formId), // 兼容1.7.0以前，不包括1.7.0
@@ -560,7 +552,6 @@ export default {
 
   unmounted() {
     this.$data.emitOn = null;
-    // this.$data.nativeOn = null;
     this.$data.scopedSlots = null;
   },
 
