@@ -21,7 +21,8 @@ import {
   resolveDirective,
   withDirectives,
   isVNode,
-  resolveComponent
+  resolveComponent,
+  markRaw
 } from "vue";
 
 export default {
@@ -87,6 +88,7 @@ export default {
      * @returns VNode
      */
     renderUi(config, isSlotCom, ref) {
+      // console.log("config.name: ", config.name);
       // config = config || {};
       var vnode;
       // 根据vue源代码, VNode是不会被劫持的
@@ -479,7 +481,7 @@ export default {
           );
         }
         // console.log("newScopedSlots", config.name, Object.keys(newScopedSlots));
-        return newScopedSlots;
+        return markRaw(newScopedSlots);
       } else {
         return undefined;
       }
