@@ -79,8 +79,8 @@ export default {
             component: {
               name: "el-date-picker",
               props: {
-                type: "date",
-                valueFormat: "yyyy-MM-dd"
+                type: "date"
+                // valueFormat: "yyyy-MM-dd"  // element-plus弃用了
               },
               flex: "full"
             }
@@ -96,8 +96,8 @@ export default {
             component: {
               name: "el-date-picker",
               props: {
-                type: "date",
-                valueFormat: "yyyy-MM-dd"
+                type: "date"
+                // valueFormat: "yyyy-MM-dd"  // element-plus弃用了
               },
               flex: "full"
             }

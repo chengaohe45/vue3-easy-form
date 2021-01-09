@@ -21,7 +21,8 @@ import {
   resolveDirective,
   withDirectives,
   isVNode,
-  resolveComponent
+  resolveComponent,
+  markRaw
 } from "vue";
 
 export default {
@@ -30,6 +31,7 @@ export default {
     return this.renderUi(this.config, false, constant.COM_TARGET_REF);
   },
   // inheritAttrs: false,
+  emits: ["trigger"],
   props: {
     config: {
       type: Object,
@@ -86,6 +88,7 @@ export default {
      * @returns VNode
      */
     renderUi(config, isSlotCom, ref) {
+      // console.log("config.name: ", config.name);
       // config = config || {};
       var vnode;
       // 根据vue源代码, VNode是不会被劫持的
@@ -194,7 +197,24 @@ export default {
         }
 
         if (config.class) {
-          newProps.class = config.class;
+          if (!config.flex) {
+            newProps.class = config.class;
+          } else {
+            var configClass = utils.deepCopy(config.class);
+            var flexClass = "es-form-component-" + config.flex;
+            if (utils.isStr(configClass)) {
+              configClass = configClass + " " + flexClass;
+            } else if (utils.isArr(configClass)) {
+              configClass.push(flexClass);
+            } else if (utils.isObj(configClass)) {
+              configClass[flexClass] = true;
+            } else {
+              configClass = flexClass;
+            }
+            newProps.class = configClass;
+          }
+        } else if (config.flex) {
+          newProps.class = "es-form-component-" + config.flex;
         }
         if (config.style) {
           newProps.style = config.style;
@@ -250,17 +270,6 @@ export default {
       } else {
         console.error("错误的config: ", config);
         throw "es-base config当是一个函数时，其返回值必须是一个虚拟节点或字符串";
-      }
-
-      // 这个不能删除：vue机制，主要是为了执行config.__refreshIndex；当表单改变时，同步更新页面
-      if (
-        !isSlotCom &&
-        config &&
-        config.__refreshIndex
-        // this.__slotUpdateTime
-      ) {
-        // 永远都不会进入这，因为__slotUpdateTime没有值的
-        // this.__slotUpdateTime++;
       }
 
       var directives = config.directives;
@@ -428,6 +437,11 @@ export default {
         if (eventName == modelValueEvent && hasOwnValue) {
           emitOn[onEventName] = function(eventData) {
             var eventValue = _thisVm.__parseModelEvent(config, eventData);
+            if (utils.isRefVal(eventValue)) {
+              // eventValue即使用是一个原始对象也没有关系，因为config.value会转化为Proxy
+              // console.log(eventValue, utils.deepCopy(eventValue));
+              eventValue = utils.deepCopy(eventValue);
+            }
             if (config.value !== eventValue) {
               config.value = eventValue;
               _thisVm.eventHandler(config, eventName, arguments, isMain, ref);
@@ -448,21 +462,29 @@ export default {
       if (scopedSlots) {
         var newScopedSlots = {};
         for (var key in scopedSlots) {
-          newScopedSlots[key] = this.newSlotFunc(key, scopedSlots[key], pref);
+          newScopedSlots[key] = this.newSlotFunc(
+            config,
+            key,
+            scopedSlots[key],
+            pref
+          );
         }
         // console.log("newScopedSlots", config.name, Object.keys(newScopedSlots));
-        return newScopedSlots;
+        return markRaw(newScopedSlots);
       } else {
         return undefined;
       }
     },
 
-    newSlotFunc(key, slotValue, pref) {
+    newSlotFunc(currentConfig, key, slotValue, pref) {
       var vm = this;
       return function(scoped) {
         // console.log("scoped", scoped);
         var vnodes;
         if (utils.isFunc(slotValue)) {
+          if (currentConfig.__refreshIndex) {
+            // 这个不能删除：vue机制，主要是为了执行config.__refreshIndex；当表单改变时，同步更新页面
+          }
           var options = {
             global: dataCache.getGlobal(vm.config.__formId),
             rootData: dataCache.getRoot(vm.config.__formId), // 兼容1.7.0以前，不包括1.7.0
@@ -500,10 +522,10 @@ export default {
 
         if (
           key === "default" &&
-          vm.config.text !== undefined &&
-          vm.config.text !== null
+          currentConfig.text !== undefined &&
+          currentConfig.text !== null
         ) {
-          vnodes.unshift(vm.config.text);
+          vnodes.unshift(currentConfig.text);
         }
 
         var newVNode,
@@ -530,7 +552,6 @@ export default {
 
   unmounted() {
     this.$data.emitOn = null;
-    // this.$data.nativeOn = null;
     this.$data.scopedSlots = null;
   },
 

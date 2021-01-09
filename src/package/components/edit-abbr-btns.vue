@@ -105,6 +105,7 @@ export default {
       placement: "top"
     };
   },
+  emits: ["up-item", "down-item", "copy-item"],
   props: {
     canDelete: {
       type: Boolean,

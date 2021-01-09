@@ -59,8 +59,8 @@ export default {
   },
   components: {
     tabsNav,
-    tabsItem,
-    native
+    tabsItem
+    // native
   }
 };
 </script>

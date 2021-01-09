@@ -2,7 +2,7 @@ export default {
   data() {
     return {};
   },
-
+  emits: ["up-item", "down-item"],
   props: {
     canDelete: {
       type: Boolean,

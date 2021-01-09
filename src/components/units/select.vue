@@ -13,6 +13,7 @@
 <style lang="scss"></style>
 
 <script>
+import utils from "@/libs/utils";
 export default {
   inheritAttrs: false,
   props: {
@@ -36,7 +37,7 @@ export default {
   components: {},
 
   created() {
-    this.$data.comVal = this.modelValue;
+    this.$data.comVal = utils.deepCopy(this.modelValue);
   },
 
   methods: {
@@ -49,9 +50,12 @@ export default {
 
   watch: {
     modelValue: {
-      handler(newVal) {
-        if (this.$data.comVal != newVal) {
-          this.$data.comVal = newVal;
+      handler() {
+        // console.log(utils.deepCopy(this.modelValue));
+        if (
+          JSON.stringify(this.$data.comVal) != JSON.stringify(this.modelValue)
+        ) {
+          this.$data.comVal = utils.deepCopy(this.modelValue);
         }
       },
       deep: false

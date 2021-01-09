@@ -166,7 +166,7 @@ export default {
             key == "name" &&
             typeof value == "object" &&
             value.render &&
-            value.staticRenderFns
+            typeof value.render === "function"
           ) {
             var vueKey = "[import导入的局部组件" + ++uniqIndex + "]";
             var myVues = this._esMyVues ? this._esMyVues : {};

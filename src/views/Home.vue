@@ -1,12 +1,12 @@
 <template>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png" />
-    <component
+    <!-- <component
       :is="'HelloWorld'"
       msg="Welcome to Your Vue.js App"
       @add-item="addItem"
-    />
-    <!-- <es-form ref="form" :schema="schema"></es-form> -->
+    /> -->
+    <es-form ref="form" :schema="schema"></es-form>
     <div style="overflow: hidden;">
       <g-select
         v-model="selectValue"
@@ -14,14 +14,40 @@
         multiple
         clearable
         placeholder="请选择活动区域"
+        @change="selectChangeHandler"
       ></g-select>
+
+      <el-select
+        v-model="selectValue2"
+        class="a12345"
+        multiple
+        clearable
+        placeholder="请选择活动区域"
+      >
+        <el-option
+          v-for="item in options2"
+          :key="item.id"
+          :label="item.text"
+          :value="item.id"
+        >
+        </el-option>
+      </el-select>
+      <el-color-picker v-model="color1" show-alpha></el-color-picker>
+      <el-date-picker
+        class="a12345"
+        style="width: 300px;"
+        v-model="dateValue"
+        type="year"
+        placeholder="选择日期"
+      >
+      </el-date-picker>
     </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+// import HelloWorld from "@/components/HelloWorld.vue";
 // import test from "@/components/test.vue";
 // import easyForm from "@/package/index.vue";
 import utils from "@/package/libs/utils";
@@ -36,188 +62,223 @@ import utils from "@/package/libs/utils";
 export default {
   name: "Home",
   components: {
-    HelloWorld
+    // HelloWorld
   },
   data() {
     return {
+      dateValue: "2000",
       selectValue: [2],
+      color1: "#409EFF",
+
       options: [
         { text: "区域1", id: 1 },
         { text: "区域2", id: 2 }
       ],
+
+      selectValue2: [3],
+      options2: [
+        { text: "区域3", id: 3 },
+        { text: "区域4", id: 4 }
+      ],
       schema: {
-        test: {
-          label: "your test",
+        regions: {
+          value: [2],
+          label: "活动区域",
           component: {
-            name: "a-input",
-            ref: "test",
+            name: "g-select",
             props: {
-              placeholder: "Basic usage"
+              placeholder: "请选择活动区域",
+              clearable: true,
+              multiple: true,
+              options: [
+                { text: "区域1", id: 1 },
+                { text: "区域2", id: 2 }
+              ]
             },
-            text: "1"
+            actions: {
+              trigger: "change",
+              handler: function() {
+                console.log("Select $listener");
+              }
+            }
           },
           rules: {
             required: true,
-            class: {
-              a: true,
-              b1: false
-            },
-            checks: {
-              trigger: "true",
-              handler: function() {
-                return "errofr";
-              }
-            }
-          },
-          array: {
-            value: ["123"],
-            hasSort: true,
-            hasCopy: true,
-            rules: {
-              required: true,
-              checks: {
-                trigger: ["input1"],
-                handler: function() {
-                  return "erro22222fr";
-                }
-              }
-            }
-          },
-
-          value: "首页位置"
-        },
-
-        test2: {
-          // hidden: true,
-          array: {
-            value: [{ test21: "21", test22: "22" }],
-            hasSort: true,
-            hasCopy: true,
-            rules: {
-              required: true,
-              checks: {
-                trigger: ["input1"],
-                handler: function() {
-                  return "erro22222fr";
-                }
-              }
-            }
-          },
-
-          properties: {
-            test21: {
-              label: "test21",
-              component: {
-                name: "a-input",
-                ref: "test21",
-                props: {
-                  placeholder: "Basic usage"
-                },
-                text: "1"
-              },
-              rules: {
-                required: true,
-                class: {
-                  a: true,
-                  b1: false
-                },
-                checks: {
-                  trigger: "true",
-                  handler: function() {
-                    return "errofr";
-                  }
-                }
-              },
-
-              col: 12,
-
-              value: "首页位置"
-            },
-
-            test22: {
-              hidden: "es: $index%2 ? true : false",
-              label: "test22",
-              component: {
-                ref: "test",
-                name: "a-input",
-                props: {
-                  placeholder: "Basic usage"
-                },
-                text: "1"
-              },
-
-              col: 12,
-
-              value: "首页位置"
-            },
-
-            test3: {
-              // hidden: true,
-              array: {
-                value: [{ test21: "21", test22: "22" }],
-                hasSort: true,
-                hasCopy: true,
-                rules: {
-                  required: true,
-                  checks: {
-                    trigger: ["input1"],
-                    handler: function() {
-                      return "erro22222fr";
-                    }
-                  }
-                }
-              },
-
-              properties: {
-                test31: {
-                  label: "test31",
-                  component: {
-                    name: "a-input",
-                    ref: "test31",
-                    props: {
-                      placeholder: "Basic usage"
-                    },
-                    text: "1"
-                  },
-                  rules: {
-                    required: true,
-                    class: {
-                      a: true,
-                      b1: false
-                    },
-                    checks: {
-                      trigger: "true",
-                      handler: function() {
-                        return "errofr";
-                      }
-                    }
-                  },
-
-                  col: 12,
-
-                  value: "首页位置"
-                },
-
-                test32: {
-                  hidden: "es: $index%2 || $root.checkbox ? true : false",
-                  label: "test32",
-                  component: {
-                    ref: "test",
-                    name: "a-input",
-                    props: {
-                      placeholder: "Basic usage"
-                    },
-                    text: "1"
-                  },
-
-                  col: 12,
-
-                  value: "首页位置"
-                }
-              }
-            }
+            emptyMsg: "请选择"
           }
         },
+        // test: {
+        //   label: "your test",
+        //   component: {
+        //     name: "a-input",
+        //     ref: "test",
+        //     props: {
+        //       placeholder: "Basic usage"
+        //     },
+        //     text: "1"
+        //   },
+        //   rules: {
+        //     required: true,
+        //     class: {
+        //       a: true,
+        //       b1: false
+        //     },
+        //     checks: {
+        //       trigger: "true",
+        //       handler: function() {
+        //         return "errofr";
+        //       }
+        //     }
+        //   },
+        //   array: {
+        //     value: ["123"],
+        //     hasSort: true,
+        //     hasCopy: true,
+        //     rules: {
+        //       required: true,
+        //       checks: {
+        //         trigger: ["input1"],
+        //         handler: function() {
+        //           return "erro22222fr";
+        //         }
+        //       }
+        //     }
+        //   },
+
+        //   value: "首页位置"
+        // },
+
+        // test2: {
+        //   // hidden: true,
+        //   array: {
+        //     value: [{ test21: "21", test22: "22" }],
+        //     hasSort: true,
+        //     hasCopy: true,
+        //     rules: {
+        //       required: true,
+        //       checks: {
+        //         trigger: ["input1"],
+        //         handler: function() {
+        //           return "erro22222fr";
+        //         }
+        //       }
+        //     }
+        //   },
+
+        //   properties: {
+        //     test21: {
+        //       label: "test21",
+        //       component: {
+        //         name: "a-input",
+        //         ref: "test21",
+        //         props: {
+        //           placeholder: "Basic usage"
+        //         },
+        //         text: "1"
+        //       },
+        //       rules: {
+        //         required: true,
+        //         class: {
+        //           a: true,
+        //           b1: false
+        //         },
+        //         checks: {
+        //           trigger: "true",
+        //           handler: function() {
+        //             return "errofr";
+        //           }
+        //         }
+        //       },
+
+        //       col: 12,
+
+        //       value: "首页位置"
+        //     },
+
+        //     test22: {
+        //       hidden: "es: $index%2 ? true : false",
+        //       label: "test22",
+        //       component: {
+        //         ref: "test",
+        //         name: "a-input",
+        //         props: {
+        //           placeholder: "Basic usage"
+        //         },
+        //         text: "1"
+        //       },
+
+        //       col: 12,
+
+        //       value: "首页位置"
+        //     },
+
+        //     test3: {
+        //       // hidden: true,
+        //       array: {
+        //         value: [{ test21: "21", test22: "22" }],
+        //         hasSort: true,
+        //         hasCopy: true,
+        //         rules: {
+        //           required: true,
+        //           checks: {
+        //             trigger: ["input1"],
+        //             handler: function() {
+        //               return "erro22222fr";
+        //             }
+        //           }
+        //         }
+        //       },
+
+        //       properties: {
+        //         test31: {
+        //           label: "test31",
+        //           component: {
+        //             name: "a-input",
+        //             ref: "test31",
+        //             props: {
+        //               placeholder: "Basic usage"
+        //             },
+        //             text: "1"
+        //           },
+        //           rules: {
+        //             required: true,
+        //             class: {
+        //               a: true,
+        //               b1: false
+        //             },
+        //             checks: {
+        //               trigger: "true",
+        //               handler: function() {
+        //                 return "errofr";
+        //               }
+        //             }
+        //           },
+
+        //           col: 12,
+
+        //           value: "首页位置"
+        //         },
+
+        //         test32: {
+        //           hidden: "es: $index%2 || $root.checkbox ? true : false",
+        //           label: "test32",
+        //           component: {
+        //             ref: "test",
+        //             name: "a-input",
+        //             props: {
+        //               placeholder: "Basic usage"
+        //             },
+        //             text: "1"
+        //           },
+
+        //           col: 12,
+
+        //           value: "首页位置"
+        //         }
+        //       }
+        //     }
+        //   }
+        // },
 
         name: {
           hidden: "es: !!$root.checkbox",
@@ -390,6 +451,9 @@ export default {
       // console.log("value:", value, arguments);
       // this.$emit("add-item", 123);
       console.log(this.$refs.form.getRef("test", true, 0));
+    },
+    selectChangeHandler() {
+      console.log("g-select:", this.selectValue);
     }
   }
 };

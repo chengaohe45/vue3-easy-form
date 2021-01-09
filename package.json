@@ -5,16 +5,17 @@
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "release": "vue-cli-service build --target lib --name es-form ./src/package/index.js",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "ant-design-vue": "^2.0.0-rc.2",
-    "core-js": "^3.8.0",
-    "element-plus": "^1.0.1-beta.3",
+    "ant-design-vue": "^2.0.0-rc.5",
+    "core-js": "^3.8.1",
+    "element-plus": "^1.0.1-beta.8",
     "util": "^0.12.3",
     "vue": "^3.0.4",
-    "vue-router": "^4.0.0-rc.6",
+    "vue-router": "^4.0.1",
     "vuex": "^4.0.0-rc.2"
   },
   "devDependencies": {
@@ -30,7 +31,7 @@
     "babel-eslint": "^10.1.0",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
-    "eslint-plugin-prettier": "^3.2.0",
+    "eslint-plugin-prettier": "^3.3.0",
     "eslint-plugin-vue": "^7.2.0",
     "node-sass": "^4.14.1",
     "prettier": "^1.19.1",
