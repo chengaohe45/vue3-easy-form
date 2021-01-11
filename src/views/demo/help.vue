@@ -16,7 +16,7 @@ export default {
     return {
       title: "帮助",
       docsTitle: "帮助配置文档",
-      docsHref: "/vue-easy-form-docs/dist/base/help.html",
+      docsHref: "/vue3-easy-form-docs/dist/base/help.html",
 
       formSchema: {
         // 位置一：在项组件后面

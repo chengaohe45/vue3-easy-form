@@ -8,7 +8,7 @@
           type="text"
           class="docs-btn"
           target="_blank"
-          href="https://github.com/chengaohe45/vue-easy-form"
+          href="https://github.com/chengaohe45/vue3-easy-form"
           >Github</a
         >
         <a
@@ -351,17 +351,17 @@ export default {
   因为element-plus > el-date-picker没有继承class(至少1.0.1-beta.8没有，不知算不算bug？但用户无法控制组件，有点不好) 
   所以要做样式覆盖
 */
-.es-form .es-form-wrap-full .el-date-editor {
-  @include flex-full;
-  width: auto;
-  white-space: nowrap;
-}
-.es-form .es-form-wrap-fixed .el-date-editor {
-  @include flex-fixed;
-  width: auto;
-  text-align: center;
-  white-space: nowrap;
-}
+// .es-form .es-form-wrap-full .el-date-editor {
+//   @include flex-full;
+//   width: auto;
+//   white-space: nowrap;
+// }
+// .es-form .es-form-wrap-fixed .el-date-editor {
+//   @include flex-fixed;
+//   width: auto;
+//   text-align: center;
+//   white-space: nowrap;
+// }
 
 .demo-form-box {
   @include display-flex;

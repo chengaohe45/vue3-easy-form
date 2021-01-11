@@ -17,7 +17,7 @@ export default {
     return {
       title: "单位",
       docsTitle: "单位配置文档",
-      docsHref: "/vue-easy-form-docs/dist/base/unit.html",
+      docsHref: "/vue3-easy-form-docs/dist/base/unit.html",
 
       formSchema: {
         properties: {

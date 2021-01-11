@@ -15,7 +15,7 @@ export default {
     return {
       title: "tabs布局",
       docsTitle: "tabs布局配置文档",
-      docsHref: "/vue-easy-form-docs/dist/base/tabs.html",
+      docsHref: "/vue3-easy-form-docs/dist/base/tabs.html",
 
       formSchema: {
         ui: {

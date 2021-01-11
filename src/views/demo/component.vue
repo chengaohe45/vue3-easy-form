@@ -16,7 +16,7 @@ export default {
     return {
       title: "项组件",
       docsTitle: "项组件配置文档",
-      docsHref: "/vue-easy-form-docs/dist/base/component.html",
+      docsHref: "/vue3-easy-form-docs/dist/base/component.html",
 
       formSchema: {
         // 写法一

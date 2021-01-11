@@ -21,7 +21,7 @@ export default {
     return {
       title: "表格数组",
       docsTitle: "数组配置文档",
-      docsHref: "/vue-easy-form-docs/dist/base/array.html",
+      docsHref: "/vue3-easy-form-docs/dist/base/array.html",
 
       formSchema: {
         ui: {

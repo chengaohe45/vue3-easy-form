@@ -19,19 +19,19 @@
       <div class="panel-body" v-if="showPanel">
         <div class="question-box">
           <a
-            href="https://chengaohe45.github.io/vue-easy-form-docs/dist/base/console.html"
+            href="https://chengaohe45.github.io/vue3-easy-form-docs/dist/base/console.html"
             target="_blank"
             class="question"
             >如何打开面板?</a
           >
           <a
-            href="https://chengaohe45.github.io/vue-easy-form-docs/dist/base/explain.html#根值"
+            href="https://chengaohe45.github.io/vue3-easy-form-docs/dist/base/explain.html#根值"
             target="_blank"
             class="question"
             >什么是根值?</a
           >
           <a
-            href="https://chengaohe45.github.io/vue-easy-form-docs/dist/base/explain.html#表单值"
+            href="https://chengaohe45.github.io/vue3-easy-form-docs/dist/base/explain.html#表单值"
             target="_blank"
             class="question"
             >什么是表单值?</a

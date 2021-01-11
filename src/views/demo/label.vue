@@ -16,7 +16,7 @@ export default {
     return {
       title: "项标签",
       docsTitle: "项标签配置文档",
-      docsHref: "/vue-easy-form-docs/dist/base/label.html",
+      docsHref: "/vue3-easy-form-docs/dist/base/label.html",
 
       formSchema: {
         // 写法一

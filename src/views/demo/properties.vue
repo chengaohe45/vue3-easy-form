@@ -15,7 +15,7 @@ export default {
     return {
       title: "块布局",
       docsTitle: "块布局配置文档",
-      docsHref: "/vue-easy-form-docs/dist/base/properties.html",
+      docsHref: "/vue3-easy-form-docs/dist/base/properties.html",
 
       formSchema: {
         // 根节点

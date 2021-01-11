@@ -32,7 +32,7 @@ export default {
       // 帮助文档的链接
       type: String,
       required: false,
-      default: "/vue-easy-form-docs/dist/base/settings.html"
+      default: "/vue3-easy-form-docs/dist/base/settings.html"
     }
   },
 

@@ -16,7 +16,7 @@ export default {
     return {
       title: "组件插槽",
       docsTitle: "组件插槽配置文档",
-      docsHref: "/vue-easy-form-docs/dist/base/scopedSlots.html",
+      docsHref: "/vue3-easy-form-docs/dist/base/scopedSlots.html",
 
       formSchema: {
         type: {

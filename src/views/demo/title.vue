@@ -16,7 +16,7 @@ export default {
     return {
       title: "标题",
       docsTitle: "标题配置文档",
-      docsHref: "/vue-easy-form-docs/dist/base/title.html",
+      docsHref: "/vue3-easy-form-docs/dist/base/title.html",
 
       formSchema: {
         name: {

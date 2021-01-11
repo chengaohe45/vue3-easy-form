@@ -16,7 +16,7 @@ export default {
     return {
       title: "描述",
       docsTitle: "描述配置文档",
-      docsHref: "/vue-easy-form-docs/dist/base/desc.html",
+      docsHref: "/vue3-easy-form-docs/dist/base/desc.html",
 
       formSchema: {
         // 写法一

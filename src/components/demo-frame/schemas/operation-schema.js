@@ -18,7 +18,7 @@ export default {
         props: {
           content: "点击查看pathKey",
           href:
-            "https://chengaohe45.github.io/vue-easy-form-docs/dist/base/explain.html#项组件路径"
+            "https://chengaohe45.github.io/vue3-easy-form-docs/dist/base/explain.html#项组件路径"
         }
       }
       // desc: "pathKey可以为空；为空则\"值\"要写成一个Object"
@@ -46,7 +46,7 @@ export default {
           content:
             "es: !{{$global}}.fromDoc ? '此值会用eval解析, 所以输入要符合格式。<br/>点击可查看值设值' : '此值会用eval解析, 所以输入要符合格式。'",
           href:
-            "es: !{{$global}}.fromDoc ? 'https://chengaohe45.github.io/vue-easy-form-docs/dist/base/value.html#设值' : ''"
+            "es: !{{$global}}.fromDoc ? 'https://chengaohe45.github.io/vue3-easy-form-docs/dist/base/value.html#设值' : ''"
         }
       }
     }
