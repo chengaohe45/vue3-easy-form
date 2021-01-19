@@ -46,7 +46,6 @@ let homeItem = {
   link:
     "/home" /* 用于点击链接; 若没有这个，说明是一个大模块，下面还有其它子页面;若存在就只有他自己，比如：home */,
   path: "/home" /* 用于路由, 要跟link保持一致 */,
-  alias: "/",
   component: homePage /* 对应的模块 */
 };
 
@@ -74,8 +73,8 @@ let navList = [
       {
         icon: "",
         name: "简单写法",
-        link: "/simple",
-        path: "/simple",
+        link: "/",
+        path: "/",
         alias: "/simple",
         component: simpleForm
       },
@@ -272,7 +271,9 @@ let navRoute = {
     let newNavList = [];
 
     //put in home page
-    newNavList.push(fetch(homeItem, navKeys3));
+    if (process.env.NODE_ENV != "production") {
+      newNavList.push(fetch(homeItem, navKeys3));
+    }
 
     navList.forEach(item => {
       if (item.path) {
@@ -297,7 +298,9 @@ let navRoute = {
   /* 取出页面注册 */
   getPages() {
     let newPageList = [];
-    newPageList.push(fetch(homeItem, pathKeys));
+    if (process.env.NODE_ENV != "production") {
+      newPageList.push(fetch(homeItem, pathKeys));
+    }
     //导航菜单，可能存在多级
     newPageList.push(...scan(navList));
     //其它页面

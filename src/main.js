@@ -40,7 +40,7 @@ app.use(esForm, {
   defaultCom: "el-input", // 如：若用element-ui, 改为el-input
   defaultVal: "", // 对defaultCom这个组件的value设置默认值
   trimDoms: ["input", "textarea", "el-input"], // 数组，空数组会全部清空
-  hasConsole: true // 推荐写成动态，编译时不用修改
+  hasConsole: process.env.NODE_ENV != "production" // 推荐写成动态，编译时不用修改
 });
 
 // app.config.warnHandler = function() {
